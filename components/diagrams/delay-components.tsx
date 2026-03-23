@@ -109,7 +109,7 @@ export function DelayComponents() {
             <span className="w-28 text-sm text-muted text-right shrink-0">
               {bar.label}
             </span>
-            <div className="flex-1 bg-slate-100 rounded-full h-7 relative overflow-hidden">
+            <div className="flex-1 bg-card dark:bg-white/10 rounded-full h-7 relative overflow-hidden">
               <div
                 className="h-full rounded-full flex items-center justify-end pr-2 transition-all duration-500"
                 style={{
@@ -135,7 +135,7 @@ export function DelayComponents() {
       </div>
 
       {/* Formulas */}
-      <div className="rounded-lg bg-slate-50 border border-border p-4 space-y-2">
+      <div className="rounded-lg bg-background border border-border p-4 space-y-2">
         <p className="text-xs font-semibold text-muted uppercase tracking-wider mb-2">
           Fórmulas
         </p>

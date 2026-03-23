@@ -145,7 +145,7 @@ export function DnsResolution() {
       </svg>
 
       {/* Step info */}
-      <div className="rounded-lg bg-slate-50 border border-border p-4">
+      <div className="rounded-lg bg-background border border-border p-4">
         <h4 className="font-semibold text-sm text-foreground mb-1">
           {steps[step].title}
         </h4>
@@ -157,7 +157,7 @@ export function DnsResolution() {
         <button
           onClick={() => setStep((s) => Math.max(0, s - 1))}
           disabled={step === 0}
-          className="px-3 py-1.5 rounded-lg bg-slate-100 text-sm text-muted hover:bg-slate-200 disabled:opacity-40 transition-colors"
+          className="px-3 py-1.5 rounded-lg bg-card hover:bg-border text-sm text-muted disabled:opacity-40 transition-colors"
         >
           Paso Anterior
         </button>
@@ -167,7 +167,7 @@ export function DnsResolution() {
         <button
           onClick={() => setStep((s) => Math.min(steps.length - 1, s + 1))}
           disabled={step >= steps.length - 1}
-          className="px-3 py-1.5 rounded-lg bg-slate-100 text-sm text-muted hover:bg-slate-200 disabled:opacity-40 transition-colors"
+          className="px-3 py-1.5 rounded-lg bg-card hover:bg-border text-sm text-muted disabled:opacity-40 transition-colors"
         >
           Siguiente Paso
         </button>

@@ -17,36 +17,36 @@
   --card: #ffffff;
 }
 
-/* ── Dark theme (GitHub-style) ───────────────────────────── */
+/* ── Dark theme (GitHub Dimmed / soft dark) ──────────────── */
 [data-theme="dark"] {
-  --background: #0d1117;
-  --foreground: #e6edf3;
-  --primary: #79c0ff;
-  --primary-light: #58a6ff;
-  --accent: #58a6ff;
-  --accent-light: #79c0ff;
-  --success: #3fb950;
-  --error: #f85149;
-  --muted: #8b949e;
-  --border: #30363d;
-  --card: #161b22;
+  --background: #22272e;
+  --foreground: #adbac7;
+  --primary: #539bf5;
+  --primary-light: #6cb6ff;
+  --accent: #539bf5;
+  --accent-light: #6cb6ff;
+  --success: #46954a;
+  --error: #e5534b;
+  --muted: #768390;
+  --border: #444c56;
+  --card: #2d333b;
 
   /* Override Tailwind's internal --color-* so utility classes work dynamically */
-  --color-background: #0d1117;
-  --color-foreground: #e6edf3;
-  --color-primary: #79c0ff;
-  --color-primary-light: #58a6ff;
-  --color-accent: #58a6ff;
-  --color-accent-light: #79c0ff;
-  --color-success: #3fb950;
-  --color-error: #f85149;
-  --color-muted: #8b949e;
-  --color-border: #30363d;
-  --color-card: #161b22;
+  --color-background: #22272e;
+  --color-foreground: #adbac7;
+  --color-primary: #539bf5;
+  --color-primary-light: #6cb6ff;
+  --color-accent: #539bf5;
+  --color-accent-light: #6cb6ff;
+  --color-success: #46954a;
+  --color-error: #e5534b;
+  --color-muted: #768390;
+  --color-border: #444c56;
+  --color-card: #2d333b;
 }
 
 /* ── Tailwind theme tokens (light values — dark overrides above) ── */
-@theme inline {
+@theme {
   --color-background: #f8fafc;
   --color-foreground: #0f172a;
   --color-primary: #1e3a5f;

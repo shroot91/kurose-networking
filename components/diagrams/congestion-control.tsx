@@ -108,7 +108,7 @@ export function CongestionControl() {
     <div className="space-y-4">
       <svg
         viewBox={`0 0 ${graphW} ${graphH}`}
-        className="w-full max-w-2xl mx-auto bg-white rounded-xl border border-border"
+        className="w-full max-w-2xl mx-auto bg-card rounded-xl border border-border"
       >
         {/* Axes */}
         <line x1={padL} y1={padT} x2={padL} y2={graphH - padB} stroke="#cbd5e1" strokeWidth={1} />
@@ -194,7 +194,7 @@ export function CongestionControl() {
         </button>
         <button
           onClick={reset}
-          className="px-4 py-2 rounded-lg bg-slate-200 text-sm font-medium text-muted hover:bg-slate-300 transition-colors"
+          className="px-4 py-2 rounded-lg bg-border text-sm font-medium text-muted hover:bg-border transition-colors"
         >
           Reiniciar
         </button>
@@ -219,7 +219,7 @@ export function CongestionControl() {
       </div>
 
       {/* Event log */}
-      <div className="rounded-lg bg-slate-50 border border-border p-3">
+      <div className="rounded-lg bg-background border border-border p-3">
         <p className="text-xs font-semibold text-muted uppercase mb-1">Último evento</p>
         <p className="text-sm text-foreground">
           {history[history.length - 1].event}

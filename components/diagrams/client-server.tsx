@@ -13,7 +13,7 @@ export function ClientServerDiagram() {
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             mode === "cs"
               ? "bg-emerald-600 text-white"
-              : "bg-slate-100 text-muted hover:bg-slate-200"
+              : "bg-card hover:bg-border text-muted"
           }`}
         >
           Cliente-Servidor
@@ -23,7 +23,7 @@ export function ClientServerDiagram() {
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             mode === "p2p"
               ? "bg-orange-600 text-white"
-              : "bg-slate-100 text-muted hover:bg-slate-200"
+              : "bg-card hover:bg-border text-muted"
           }`}
         >
           Peer-to-Peer (P2P)

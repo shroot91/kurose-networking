@@ -211,7 +211,7 @@ export function SlidingWindow() {
         )}
         <button
           onClick={reset}
-          className="px-4 py-2 rounded-lg bg-slate-200 text-sm font-medium text-muted hover:bg-slate-300 transition-colors"
+          className="px-4 py-2 rounded-lg bg-border text-sm font-medium text-muted hover:bg-border transition-colors"
         >
           Reiniciar
         </button>
@@ -219,14 +219,14 @@ export function SlidingWindow() {
 
       {/* Info */}
       <div className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-lg bg-slate-50 border border-border p-3">
+        <div className="rounded-lg bg-background border border-border p-3">
           <p className="text-xs font-semibold text-muted uppercase mb-1">Estado</p>
           <p className="text-sm">
             Base: <strong>{base}</strong> | Siguiente Seq: <strong>{nextSeq}</strong> |
             Ventana: [{base}, {Math.min(base + WINDOW_SIZE - 1, TOTAL_PACKETS - 1)}]
           </p>
         </div>
-        <div className="rounded-lg bg-slate-50 border border-border p-3">
+        <div className="rounded-lg bg-background border border-border p-3">
           <p className="text-xs font-semibold text-muted uppercase mb-1">Log</p>
           <div className="text-xs text-muted space-y-0.5 max-h-20 overflow-y-auto">
             {log.map((entry, i) => (

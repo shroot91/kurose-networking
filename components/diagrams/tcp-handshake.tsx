@@ -125,7 +125,7 @@ export function TcpHandshake() {
       </svg>
 
       {/* Description */}
-      <div className="rounded-lg bg-slate-50 border border-border p-4">
+      <div className="rounded-lg bg-background border border-border p-4">
         <p className="text-sm text-muted leading-relaxed">{descriptions[step]}</p>
       </div>
 
@@ -134,7 +134,7 @@ export function TcpHandshake() {
         <button
           onClick={() => setStep((s) => Math.max(0, s - 1))}
           disabled={step === 0}
-          className="px-3 py-1.5 rounded-lg bg-slate-100 text-sm text-muted hover:bg-slate-200 disabled:opacity-40"
+          className="px-3 py-1.5 rounded-lg bg-card hover:bg-border text-sm text-muted disabled:opacity-40"
         >
           Anterior
         </button>
@@ -154,7 +154,7 @@ export function TcpHandshake() {
         <button
           onClick={() => setStep((s) => Math.min(5, s + 1))}
           disabled={step >= 5}
-          className="px-3 py-1.5 rounded-lg bg-slate-100 text-sm text-muted hover:bg-slate-200 disabled:opacity-40"
+          className="px-3 py-1.5 rounded-lg bg-card hover:bg-border text-sm text-muted disabled:opacity-40"
         >
           Siguiente
         </button>

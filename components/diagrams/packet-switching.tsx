@@ -53,7 +53,7 @@ export function PacketSwitching() {
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             mode === "packet"
               ? "bg-blue-600 text-white"
-              : "bg-slate-100 text-muted hover:bg-slate-200"
+              : "bg-card hover:bg-border text-muted"
           }`}
         >
           Conmutación de Paquetes
@@ -63,7 +63,7 @@ export function PacketSwitching() {
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
             mode === "circuit"
               ? "bg-purple-600 text-white"
-              : "bg-slate-100 text-muted hover:bg-slate-200"
+              : "bg-card hover:bg-border text-muted"
           }`}
         >
           Conmutación de Circuitos
@@ -205,7 +205,7 @@ export function PacketSwitching() {
         <button
           onClick={() => setStep((s) => Math.max(0, s - 1))}
           disabled={step === 0}
-          className="px-3 py-1.5 rounded-lg bg-slate-100 text-sm text-muted hover:bg-slate-200 disabled:opacity-40 transition-colors"
+          className="px-3 py-1.5 rounded-lg bg-card hover:bg-border text-sm text-muted disabled:opacity-40 transition-colors"
         >
           Anterior
         </button>
@@ -230,7 +230,7 @@ export function PacketSwitching() {
         <button
           onClick={() => setStep((s) => Math.min(maxSteps, s + 1))}
           disabled={step >= maxSteps}
-          className="px-3 py-1.5 rounded-lg bg-slate-100 text-sm text-muted hover:bg-slate-200 disabled:opacity-40 transition-colors"
+          className="px-3 py-1.5 rounded-lg bg-card hover:bg-border text-sm text-muted disabled:opacity-40 transition-colors"
         >
           Siguiente
         </button>

@@ -122,7 +122,7 @@ export function HttpExchange() {
       </svg>
 
       {/* Step info */}
-      <div className="rounded-lg bg-slate-50 border border-border p-4">
+      <div className="rounded-lg bg-background border border-border p-4">
         <h4 className="font-semibold text-sm mb-1">{httpSteps[step].title}</h4>
         <p className="text-sm text-muted leading-relaxed">{httpSteps[step].desc}</p>
         {httpSteps[step].client && (
@@ -142,7 +142,7 @@ export function HttpExchange() {
         <button
           onClick={() => setStep((s) => Math.max(0, s - 1))}
           disabled={step === 0}
-          className="px-3 py-1.5 rounded-lg bg-slate-100 text-sm text-muted hover:bg-slate-200 disabled:opacity-40"
+          className="px-3 py-1.5 rounded-lg bg-card hover:bg-border text-sm text-muted disabled:opacity-40"
         >
           Anterior
         </button>
@@ -152,7 +152,7 @@ export function HttpExchange() {
         <button
           onClick={() => setStep((s) => Math.min(httpSteps.length - 1, s + 1))}
           disabled={step >= httpSteps.length - 1}
-          className="px-3 py-1.5 rounded-lg bg-slate-100 text-sm text-muted hover:bg-slate-200 disabled:opacity-40"
+          className="px-3 py-1.5 rounded-lg bg-card hover:bg-border text-sm text-muted disabled:opacity-40"
         >
           Siguiente
         </button>

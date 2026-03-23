@@ -155,7 +155,7 @@ export default function Capitulo2() {
             Una página web tiene 1 archivo HTML base y <strong>10 objetos
             embebidos</strong>. RTT = 100 ms.
           </p>
-          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 rounded p-3">
+          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 dark:bg-white/[0.07] rounded p-3">
             <p className="font-bold">HTTP No Persistente (sin conexiones paralelas):</p>
             <p>Cada objeto = 2 RTT (1 TCP handshake + 1 request/response)</p>
             <p>Total = 11 objetos × 2 RTT = 22 × 100 ms = <strong>2,200 ms</strong></p>
@@ -174,7 +174,7 @@ export default function Capitulo2() {
             HTTP es <strong>stateless</strong> (sin estado): el servidor no
             recuerda interacciones previas. Las <strong>cookies</strong> permiten
             a los sitios rastrear usuarios. El servidor envía un{" "}
-            <code className="bg-slate-100 px-1 rounded">Set-Cookie</code> en la
+            <code className="bg-card dark:bg-white/10 px-1 rounded">Set-Cookie</code> en la
             respuesta, y el navegador incluye esa cookie en solicitudes futuras
             al mismo sitio.
           </p>

@@ -211,7 +211,7 @@ export default function Capitulo3() {
           <p>
             Supongamos dos palabras de 16 bits a sumar:
           </p>
-          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 rounded p-3">
+          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 dark:bg-white/[0.07] rounded p-3">
             <p>Palabra 1: 0110 0110 0110 0000</p>
             <p>Palabra 2: 0101 0101 0101 0101</p>
             <p className="border-t border-amber-300 pt-1">
@@ -268,7 +268,7 @@ export default function Capitulo3() {
             Enlace de <strong>1 Gbps</strong>, RTT = <strong>30 ms</strong>,
             paquete de <strong>8,000 bits</strong>.
           </p>
-          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 rounded p-3">
+          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 dark:bg-white/[0.07] rounded p-3">
             <p>d_trans = 8,000 / 10⁹ = 0.008 ms</p>
             <p className="font-bold pt-1">Stop-and-Wait:</p>
             <p>Utilización = d_trans / (RTT + d_trans) = 0.008 / 30.008 = <strong>0.00027 = 0.027%</strong></p>
@@ -314,7 +314,7 @@ export default function Capitulo3() {
             <strong>1,000 bytes</strong> y ISN (número de secuencia inicial) ={" "}
             <strong>0</strong>.
           </p>
-          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 rounded p-3">
+          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 dark:bg-white/[0.07] rounded p-3">
             <p>Total de segmentos = 500,000 / 1,000 = <strong>500 segmentos</strong></p>
             <p className="pt-1">Segmento 1: Seq = 0, bytes 0-999</p>
             <p>Segmento 2: Seq = 1000, bytes 1000-1999</p>
@@ -339,7 +339,7 @@ export default function Capitulo3() {
             su buffer. <strong>Control de congestión (cwnd):</strong> evita
             desbordar la <em>red</em>. El emisor ajusta su tasa de envío según la
             congestión percibida. El emisor envía a velocidad ={" "}
-            <code className="bg-slate-100 px-1 rounded">min(cwnd, rwnd)</code>.
+            <code className="bg-card dark:bg-white/10 px-1 rounded">min(cwnd, rwnd)</code>.
           </p>
         </InfoCallout>
       </SectionBlock>
@@ -408,7 +408,7 @@ export default function Capitulo3() {
           <p>
             Supongamos ssthresh inicial = 8 MSS:
           </p>
-          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 rounded p-3">
+          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 dark:bg-white/[0.07] rounded p-3">
             <p className="font-bold">Slow Start (exponencial):</p>
             <p>RTT 0: cwnd = 1 → RTT 1: cwnd = 2 → RTT 2: cwnd = 4 → RTT 3: cwnd = 8</p>
             <p className="font-bold pt-1 border-t border-amber-300">Congestion Avoidance (lineal, cwnd ≥ ssthresh):</p>

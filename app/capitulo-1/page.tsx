@@ -76,17 +76,17 @@ export default function Capitulo1() {
         </InfoCallout>
 
         <div className="grid gap-4 sm:grid-cols-3">
-          <ConceptCard title="Hosts" icon={MonitorSmartphone} color="bg-slate-50 text-slate-700 border-slate-200">
+          <ConceptCard title="Hosts" icon={MonitorSmartphone} color="bg-card text-foreground border-border">
             <p>
               Dispositivos conectados a Internet. Se llaman &quot;sistemas finales&quot; porque están en el borde de la red. Ejecutan aplicaciones (navegadores, servidores web, apps móviles).
             </p>
           </ConceptCard>
-          <ConceptCard title="Routers" icon={Router} color="bg-slate-50 text-slate-700 border-slate-200">
+          <ConceptCard title="Routers" icon={Router} color="bg-card text-foreground border-border">
             <p>
               Conmutadores de paquetes que reenvían paquetes hacia su destino. Operan en la capa de red. Cada router examina la dirección destino del paquete y lo reenvía por el enlace apropiado.
             </p>
           </ConceptCard>
-          <ConceptCard title="Enlaces" icon={Cable} color="bg-slate-50 text-slate-700 border-slate-200">
+          <ConceptCard title="Enlaces" icon={Cable} color="bg-card text-foreground border-border">
             <p>
               Medios físicos que conectan los dispositivos: fibra óptica, cable coaxial, par trenzado, ondas de radio. Cada enlace tiene una <strong>tasa de transmisión</strong> (bandwidth) medida en bps.
             </p>
@@ -252,7 +252,7 @@ export default function Capitulo1() {
             <strong>2,500 km</strong> de longitud. Retardo de procesamiento:{" "}
             <strong>0.01 ms</strong>.
           </p>
-          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 rounded p-3">
+          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 dark:bg-white/[0.07] rounded p-3">
             <p>L = 1,500 × 8 = 12,000 bits</p>
             <p>R = 100 × 10⁶ = 100,000,000 bps</p>
             <p>d = 2,500 × 1,000 = 2,500,000 m</p>
