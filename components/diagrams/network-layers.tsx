@@ -175,10 +175,10 @@ export function NetworkLayers() {
         </div>
 
         {/* Detail panel */}
-        <div className="lg:w-80 shrink-0">
+        <div className="lg:w-[440px] shrink-0">
           {active !== null ? (
             <div
-              className="rounded-2xl border-2 overflow-hidden animate-fade-in-up"
+              className="rounded-2xl border-2 overflow-hidden animate-fade-in-up bg-card"
               style={{ borderColor: layers[active].color }}
             >
               {/* Header */}
@@ -197,7 +197,7 @@ export function NetworkLayers() {
                 </p>
               </div>
 
-              <div className="px-5 py-4 space-y-4 overflow-y-auto" style={{ maxHeight: 500 }}>
+              <div className="px-5 py-4 space-y-4 overflow-y-auto" style={{ maxHeight: 600 }}>
                 <p className="text-sm text-foreground leading-relaxed">{layers[active].description}</p>
 
                 {/* Protocols */}
