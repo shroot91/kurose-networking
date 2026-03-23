@@ -3,25 +3,20 @@
 import { useState, useEffect, useCallback } from "react";
 import { Play, Pause, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
 
-// 3 source hosts + 3 routers + 1 destination
 const NODES = [
-  { id: "h1",  x: 75,  y: 190, label: "Host 1",   type: "host"   },
-  { id: "h2",  x: 75,  y: 55,  label: "Host 2",   type: "host"   },
-  { id: "h3",  x: 75,  y: 325, label: "Host 3",   type: "host"   },
-  { id: "r1",  x: 260, y: 110, label: "Router A",  type: "router" },
-  { id: "r2",  x: 450, y: 265, label: "Router B",  type: "router" },
-  { id: "r3",  x: 645, y: 115, label: "Router C",  type: "router" },
-  { id: "dst", x: 840, y: 200, label: "Destino",   type: "host"   },
+  { id: "src", x: 80,  y: 175, label: "Origen",   type: "host" },
+  { id: "r1",  x: 260, y: 90,  label: "Router A",  type: "router" },
+  { id: "r2",  x: 440, y: 260, label: "Router B",  type: "router" },
+  { id: "r3",  x: 620, y: 100, label: "Router C",  type: "router" },
+  { id: "dst", x: 800, y: 200, label: "Destino",   type: "host" },
 ];
 
 const LINKS = [
-  { from: 0, to: 3 }, // H1  → R1
-  { from: 1, to: 3 }, // H2  → R1
-  { from: 2, to: 4 }, // H3  → R2
-  { from: 3, to: 4 }, // R1  → R2
-  { from: 3, to: 5 }, // R1  → R3
-  { from: 4, to: 6 }, // R2  → DST
-  { from: 5, to: 6 }, // R3  → DST
+  { from: 0, to: 1 },
+  { from: 1, to: 2 },
+  { from: 1, to: 3 },
+  { from: 2, to: 4 },
+  { from: 3, to: 4 },
 ];
 
 const PACKETS = [
@@ -30,42 +25,68 @@ const PACKETS = [
   { id: 2, color: "#f59e0b", label: "P3" },
 ];
 
-// step → [pkt0, pkt1, pkt2]  node indices per packet
-const PACKET_STEPS: Record<number, { node: number }[][]> = {
-  0: [[{ node: 0 }], [{ node: 1 }], [{ node: 2 }]],   // packets at their hosts
-  1: [[{ node: 3 }], [{ node: 3 }], [{ node: 4 }]],   // P1+P2 both at R1 (queue!), P3 at R2
-  2: [[{ node: 5 }], [{ node: 3 }], [{ node: 6 }]],   // P1→R3, P2 still waiting at R1, P3 reaches DST
-  3: [[{ node: 6 }], [{ node: 5 }], [{ node: 6 }]],   // P1 at DST, P2→R3, P3 at DST
-  4: [[{ node: 6 }], [{ node: 6 }], [{ node: 6 }]],   // all at DST ✓
+// Packet positions per step for packet switching: [nodeIndex, queueSlot]
+// nodeIndex: which node, -1 = in transit on a link, -2 = arrived at dst
+const PACKET_STEPS: Record<number, { node: number; link?: [number, number]; progress?: number }[][]> = {
+  // step → [pkt0, pkt1, pkt2]
+  0: [
+    [{ node: 0 }],
+    [{ node: 0 }],
+    [{ node: 0 }],
+  ],
+  1: [
+    [{ node: 1 }],          // P1 en R-A
+    [{ node: 0 }],
+    [{ node: 0 }],
+  ],
+  2: [
+    [{ node: 3 }],          // P1 en R-C
+    [{ node: 1 }],          // P2 en R-A
+    [{ node: 0 }],
+  ],
+  3: [
+    [{ node: 4 }],          // P1 en DST
+    [{ node: 3 }],          // P2 en R-C
+    [{ node: 1 }],          // P3 en R-A
+  ],
+  4: [
+    [{ node: 4 }],
+    [{ node: 4 }],          // P2 en DST
+    [{ node: 3 }],          // P3 en R-C
+  ],
+  5: [
+    [{ node: 4 }],
+    [{ node: 4 }],
+    [{ node: 4 }],          // P3 en DST ✓
+  ],
 };
 
 const PACKET_DESCRIPTIONS = [
-  "Tres hosts tienen paquetes listos para enviar al mismo destino. En conmutación de paquetes no se reservan recursos: los paquetes compiten dinámicamente por los enlaces.",
-  "H1 y H2 envían simultáneamente hacia Router A — P1 y P2 llegan a la vez → P2 se encola en el buffer (store-and-forward). H3 envía P3 directamente a Router B por un camino independiente.",
-  "Router A reenvía P1 primero hacia Router C; P2 sigue esperando en la cola de R1. P3 completa su trayecto y alcanza el destino.",
-  "P1 llega al destino. P2 es finalmente reenviado desde Router A hacia Router C. P3 ya descansa en el destino.",
-  "✓ Los tres paquetes llegaron. La cola en Router A causó retardo extra a P2 — esto es multiplexación estadística en acción.",
+  "El mensaje original se fragmenta en 3 paquetes independientes en el nodo origen.",
+  "P1 llega al Router A → se almacena en buffer (store-and-forward) y se analiza la cabecera.",
+  "P1 avanza hacia Router C (ruta superior); P2 llega al Router A.",
+  "P1 alcanza el destino; P2 sigue por Router C; P3 llega al Router A.",
+  "P2 completa el viaje y llega al destino junto con P1.",
+  "✓ Todos los paquetes llegaron. El destino reensambla el mensaje original.",
 ];
 
 const CIRCUIT_STEPS = [
-  "Estado inicial: tres hosts desean comunicarse con el destino pero no hay circuitos establecidos.",
-  "Fase de señalización: se reserva ancho de banda exclusivo en cada enlace para los tres circuitos (azul, verde, naranja).",
-  "Tres circuitos dedicados activos. Cada flujo tiene ancho de banda garantizado — pero los recursos no utilizados permanecen ociosos.",
-  "Al finalizar, los tres circuitos se liberan y el ancho de banda queda disponible para nuevas conexiones.",
+  "Estado inicial: no hay circuito establecido entre origen y destino.",
+  "Fase de señalización: se reserva ancho de banda en cada enlace del camino.",
+  "Circuito dedicado activo. Los datos fluyen continuamente sin interrupciones.",
+  "Al finalizar, se libera el circuito y los recursos quedan disponibles nuevamente.",
 ];
 
 function getNodePos(i: number) {
   return NODES[i];
 }
 
-function PacketCircle({
-  x, y, color, label, size = 13,
-}: {
-  x: number; y: number; color: string; label: string; size?: number;
+function PacketCircle({ x, y, color, label, opacity = 1, size = 14 }: {
+  x: number; y: number; color: string; label: string; opacity?: number; size?: number;
 }) {
   return (
-    <g>
-      <circle cx={x} cy={y} r={size} fill={color} stroke="white" strokeWidth={1.5} />
+    <g opacity={opacity}>
+      <circle cx={x} cy={y} r={size} fill={color} />
       <text x={x} y={y + 4} textAnchor="middle" fill="white" fontSize={9} fontWeight="bold">
         {label}
       </text>
@@ -77,7 +98,7 @@ export function PacketSwitching() {
   const [mode, setMode] = useState<"packet" | "circuit">("packet");
   const [step, setStep] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const maxSteps = mode === "packet" ? 4 : 3;
+  const maxSteps = mode === "packet" ? 5 : 3;
 
   const reset = useCallback(() => {
     setStep(0);
@@ -93,7 +114,7 @@ export function PacketSwitching() {
 
   useEffect(() => { reset(); }, [mode, reset]);
 
-  const packetPositions = PACKET_STEPS[step] ?? PACKET_STEPS[4];
+  const packetPositions = PACKET_STEPS[step] ?? PACKET_STEPS[5];
 
   return (
     <div className="rounded-2xl border border-border bg-card overflow-hidden">
@@ -128,7 +149,7 @@ export function PacketSwitching() {
 
       {/* SVG Diagram */}
       <div className="p-4 bg-slate-50 dark:bg-white/[0.03] overflow-x-auto">
-        <svg viewBox="0 0 960 400" className="w-full" style={{ minWidth: 580, minHeight: 210 }}>
+        <svg viewBox="0 0 900 350" className="w-full" style={{ minWidth: 560, minHeight: 200 }}>
           <defs>
             <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
               <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8" />
@@ -139,43 +160,38 @@ export function PacketSwitching() {
             </filter>
           </defs>
 
-          {/* Background grid */}
-          <pattern id="grid2" width="40" height="40" patternUnits="userSpaceOnUse">
+          {/* Background grid subtle */}
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
             <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.2" />
           </pattern>
-          <rect width="960" height="400" fill="url(#grid2)" />
+          <rect width="900" height="350" fill="url(#grid)" />
 
           {/* Links */}
           {LINKS.map(({ from, to }, i) => {
             const a = getNodePos(from);
             const b = getNodePos(to);
-            // Circuit 1: H1→R1→R3→DST  links: [0,3],[3,5],[5,6]
-            const c1 = mode === "circuit" && step >= 1 && step < 3 &&
-              ((from === 0 && to === 3) || (from === 3 && to === 5) || (from === 5 && to === 6));
-            // Circuit 2: H2→R1→R2→DST  links: [1,3],[3,4],[4,6]
-            const c2 = mode === "circuit" && step >= 1 && step < 3 &&
-              ((from === 1 && to === 3) || (from === 3 && to === 4) || (from === 4 && to === 6));
-            // Circuit 3: H3→R2→DST  links: [2,4],[4,6]
-            const c3 = mode === "circuit" && step >= 1 && step < 3 &&
-              ((from === 2 && to === 4));
+            const isCircuitActive = mode === "circuit" && step >= 1 &&
+              ((from === 0 && to === 1) || (to === 3 || from === 3) || (to === 4 || from === 4));
             return (
               <g key={i}>
+                {/* Base link */}
                 <line
                   x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                  stroke="#94a3b8" strokeWidth={2} opacity={0.4}
+                  stroke="#94a3b8"
+                  strokeWidth={2}
+                  opacity={0.4}
                 />
-                {c1 && (
-                  <line x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                    stroke="#3b82f6" strokeWidth={5} opacity={0.5} strokeLinecap="round" />
+                {/* Circuit highlight */}
+                {isCircuitActive && mode === "circuit" && (
+                  <line
+                    x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+                    stroke="#8b5cf6"
+                    strokeWidth={5}
+                    opacity={0.5}
+                    strokeLinecap="round"
+                  />
                 )}
-                {c2 && (
-                  <line x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                    stroke="#10b981" strokeWidth={5} opacity={0.5} strokeLinecap="round" />
-                )}
-                {c3 && (
-                  <line x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                    stroke="#f59e0b" strokeWidth={5} opacity={0.5} strokeLinecap="round" />
-                )}
+                {/* Link label (bandwidth) */}
                 <text
                   x={(a.x + b.x) / 2 + 8}
                   y={(a.y + b.y) / 2 - 8}
@@ -189,24 +205,17 @@ export function PacketSwitching() {
             );
           })}
 
-          {/* Animated circuit data flows (step 2 only) */}
-          {mode === "circuit" && step === 2 && (
+          {/* Animated circuit data flow */}
+          {mode === "circuit" && step >= 2 && (
             <>
+              {/* Path: src → R1 → R3 → dst */}
               <polyline
-                points={`${NODES[0].x},${NODES[0].y} ${NODES[3].x},${NODES[3].y} ${NODES[5].x},${NODES[5].y} ${NODES[6].x},${NODES[6].y}`}
-                fill="none" stroke="#3b82f6" strokeWidth={3} strokeDasharray="12,6" opacity={0.9}
-              >
-                <animate attributeName="stroke-dashoffset" from="60" to="0" dur="1.5s" repeatCount="indefinite" />
-              </polyline>
-              <polyline
-                points={`${NODES[1].x},${NODES[1].y} ${NODES[3].x},${NODES[3].y} ${NODES[4].x},${NODES[4].y} ${NODES[6].x},${NODES[6].y}`}
-                fill="none" stroke="#10b981" strokeWidth={3} strokeDasharray="12,6" opacity={0.9}
-              >
-                <animate attributeName="stroke-dashoffset" from="60" to="0" dur="1.5s" repeatCount="indefinite" />
-              </polyline>
-              <polyline
-                points={`${NODES[2].x},${NODES[2].y} ${NODES[4].x},${NODES[4].y} ${NODES[6].x},${NODES[6].y}`}
-                fill="none" stroke="#f59e0b" strokeWidth={3} strokeDasharray="12,6" opacity={0.9}
+                points={`${NODES[0].x},${NODES[0].y} ${NODES[1].x},${NODES[1].y} ${NODES[3].x},${NODES[3].y} ${NODES[4].x},${NODES[4].y}`}
+                fill="none"
+                stroke="#8b5cf6"
+                strokeWidth={3}
+                strokeDasharray="12,6"
+                opacity={0.8}
               >
                 <animate attributeName="stroke-dashoffset" from="60" to="0" dur="1.5s" repeatCount="indefinite" />
               </polyline>
@@ -216,32 +225,41 @@ export function PacketSwitching() {
           {/* Nodes */}
           {NODES.map((node, i) => {
             const isHost = node.type === "host";
-            const r = isHost ? 24 : 22;
+            const r = isHost ? 28 : 22;
             const fill = isHost
-              ? (i === 0 ? "#3b82f6" : i === 1 ? "#10b981" : i === 2 ? "#f59e0b" : "#10b981")
+              ? (i === 0 ? "#3b82f6" : "#10b981")
               : "#475569";
             const strokeColor = isHost ? "#fff" : "#94a3b8";
-            const labelText = i === 0 ? "H1" : i === 1 ? "H2" : i === 2 ? "H3" : i === 6 ? "DST" : node.id.toUpperCase();
 
             return (
               <g key={node.id}>
-                {/* Glow when a packet is at this node */}
+                {/* Glow ring when active in packet mode */}
                 {mode === "packet" && packetPositions.some(pos => pos[0]?.node === i) && (
                   <circle cx={node.x} cy={node.y} r={r + 8} fill={fill} opacity={0.2} />
                 )}
                 <circle
                   cx={node.x} cy={node.y} r={r}
-                  fill={fill} stroke={strokeColor} strokeWidth={2}
+                  fill={fill}
+                  stroke={strokeColor}
+                  strokeWidth={2}
                 />
+                {/* Icon text */}
                 <text
                   x={node.x} y={node.y + 4}
-                  textAnchor="middle" fill="white" fontSize={8} fontWeight="bold"
+                  textAnchor="middle"
+                  fill="white"
+                  fontSize={isHost ? 9 : 8}
+                  fontWeight="bold"
                 >
-                  {labelText}
+                  {node.id === "src" ? "SRC" : node.id === "dst" ? "DST" : node.id.toUpperCase()}
                 </text>
+                {/* Label below */}
                 <text
-                  x={node.x} y={node.y + r + 15}
-                  textAnchor="middle" fill="#64748b" fontSize={10} fontWeight="500"
+                  x={node.x} y={node.y + r + 16}
+                  textAnchor="middle"
+                  fill="#64748b"
+                  fontSize={11}
+                  fontWeight="500"
                 >
                   {node.label}
                 </text>
@@ -267,41 +285,46 @@ export function PacketSwitching() {
             );
           })}
 
-          {/* Packet circles at hosts */}
-          {mode === "packet" && packetPositions.map((pos, pi) => {
-            const nodeIdx = pos[0]?.node;
-            if (nodeIdx === undefined) return null;
-            const node = NODES[nodeIdx];
-            if (node.type === "router") return null;
+          {/* Packet dots in transit — show at destination in a stack */}
+          {mode === "packet" && (
+            <>
+              {packetPositions.map((pos, pi) => {
+                const nodeIdx = pos[0]?.node;
+                if (nodeIdx === undefined) return null;
+                const node = NODES[nodeIdx];
+                const isRouter = node.type === "router";
+                // Don't draw dot at router (shown as queue rect above)
+                if (isRouter) return null;
 
-            const isSource = nodeIdx < 3;
-            // Sources: show packet beside host node; destination: stack vertically
-            const offsetX = isSource ? 30 : (pi - 1) * 22;
-            const offsetY = isSource ? 0 : 0;
+                // At source: spread packets left of center
+                const offsetX = nodeIdx === 0 ? (pi - 1) * 22 : (pi - 1) * 18;
+                const offsetY = nodeIdx === 4 ? (pi - 1) * 22 : 0;
 
-            return (
-              <PacketCircle
-                key={pi}
-                x={node.x + offsetX}
-                y={node.y + offsetY}
-                color={PACKETS[pi].color}
-                label={PACKETS[pi].label}
-                size={step === 4 && nodeIdx === 6 ? 15 : 12}
-              />
-            );
-          })}
+                return (
+                  <PacketCircle
+                    key={pi}
+                    x={node.x + offsetX}
+                    y={node.y + offsetY}
+                    color={PACKETS[pi].color}
+                    label={PACKETS[pi].label}
+                    size={step === 5 && nodeIdx === 4 ? 16 : 13}
+                  />
+                );
+              })}
+            </>
+          )}
 
           {/* Step indicator */}
-          <text x={480} y={392} textAnchor="middle" fill="#94a3b8" fontSize={11}>
+          <text x={445} y={340} textAnchor="middle" fill="#94a3b8" fontSize={11}>
             Paso {step} / {maxSteps}
           </text>
 
           {/* Legend */}
-          <g transform="translate(20, 18)">
+          <g transform="translate(20, 20)">
             {mode === "packet" ? (
               <>
                 {PACKETS.map((p, i) => (
-                  <g key={i} transform={`translate(${i * 68}, 0)`}>
+                  <g key={i} transform={`translate(${i * 70}, 0)`}>
                     <circle cx={8} cy={8} r={8} fill={p.color} />
                     <text x={20} y={12} fill="#64748b" fontSize={10}>{p.label}</text>
                   </g>
@@ -309,16 +332,8 @@ export function PacketSwitching() {
               </>
             ) : (
               <>
-                {[
-                  { c: "#3b82f6", t: "Circuito H1" },
-                  { c: "#10b981", t: "Circuito H2" },
-                  { c: "#f59e0b", t: "Circuito H3" },
-                ].map((item, i) => (
-                  <g key={i} transform={`translate(${i * 105}, 0)`}>
-                    <line x1={0} y1={8} x2={20} y2={8} stroke={item.c} strokeWidth={3} strokeDasharray="6,3" />
-                    <text x={26} y={12} fill="#64748b" fontSize={10}>{item.t}</text>
-                  </g>
-                ))}
+                <line x1={0} y1={8} x2={20} y2={8} stroke="#8b5cf6" strokeWidth={3} strokeDasharray="6,3" />
+                <text x={26} y={12} fill="#64748b" fontSize={10}>Circuito reservado</text>
               </>
             )}
           </g>
@@ -346,6 +361,7 @@ export function PacketSwitching() {
         </button>
 
         <div className="flex items-center gap-2">
+          {/* Step dots */}
           {Array.from({ length: maxSteps + 1 }).map((_, i) => (
             <button
               key={i}
