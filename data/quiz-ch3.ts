@@ -1,10 +1,10 @@
 import type { QuizQuestion } from "@/types/quiz";
 
+// Correct answers: b b b b c b c a b b d a c d a b d c a d
 export const quizCh3: QuizQuestion[] = [
   {
     id: "ch3-q1",
-    question:
-      "¿Cuál es el propósito del número de secuencia en TCP?",
+    question: "¿Cuál es el propósito del número de secuencia en TCP?",
     options: [
       { id: "a", text: "Identificar el puerto destino" },
       { id: "b", text: "Detectar segmentos duplicados y ordenar datos correctamente" },
@@ -17,8 +17,7 @@ export const quizCh3: QuizQuestion[] = [
   },
   {
     id: "ch3-q2",
-    question:
-      "En el arranque lento de TCP (slow start), el tamaño de la ventana de congestión (cwnd)...",
+    question: "En el arranque lento de TCP (slow start), el tamaño de la ventana de congestión (cwnd)...",
     options: [
       { id: "a", text: "Aumenta linealmente (suma 1 MSS por RTT)" },
       { id: "b", text: "Se duplica cada RTT (crecimiento exponencial)" },
@@ -31,8 +30,7 @@ export const quizCh3: QuizQuestion[] = [
   },
   {
     id: "ch3-q3",
-    question:
-      "¿Qué protocolo de transporte usarías para una aplicación de videoconferencia en tiempo real?",
+    question: "¿Qué protocolo de transporte usarías para una aplicación de videoconferencia en tiempo real?",
     options: [
       { id: "a", text: "TCP, porque necesita entrega confiable" },
       { id: "b", text: "UDP, porque la baja latencia es más importante que la confiabilidad perfecta" },
@@ -45,8 +43,7 @@ export const quizCh3: QuizQuestion[] = [
   },
   {
     id: "ch3-q4",
-    question:
-      "¿Cuál de las siguientes afirmaciones sobre UDP es CORRECTA?",
+    question: "¿Cuál de las siguientes afirmaciones sobre UDP es CORRECTA?",
     options: [
       { id: "a", text: "UDP garantiza la entrega ordenada de los datos" },
       { id: "b", text: "UDP proporciona multiplexación/demultiplexación y verificación de errores" },
@@ -59,8 +56,7 @@ export const quizCh3: QuizQuestion[] = [
   },
   {
     id: "ch3-q5",
-    question:
-      "En TCP, ¿qué sucede cuando el emisor detecta 3 ACKs duplicados?",
+    question: "En TCP, ¿qué sucede cuando el emisor detecta 3 ACKs duplicados?",
     options: [
       { id: "a", text: "Cierra la conexión inmediatamente" },
       { id: "b", text: "cwnd se reduce a 1 MSS y entra en slow start" },
@@ -69,12 +65,11 @@ export const quizCh3: QuizQuestion[] = [
     ],
     correctAnswerId: "c",
     explanation:
-      "3 ACKs duplicados indican que probablemente se perdió un segmento específico pero los posteriores sí llegaron. TCP realiza 'fast retransmit' del segmento perdido y entra en 'fast recovery': ssthresh = cwnd/2, cwnd = ssthresh (no baja a 1). Esto es menos drástico que un timeout porque la red aún está entregando paquetes.",
+      "3 ACKs duplicados indican que probablemente se perdió un segmento específico pero los posteriores sí llegaron. TCP realiza 'fast retransmit' del segmento perdido y entra en 'fast recovery': ssthresh = cwnd/2, cwnd = ssthresh. Esto es menos drástico que un timeout porque la red aún está entregando paquetes.",
   },
   {
     id: "ch3-q6",
-    question:
-      "¿Cuál es la diferencia fundamental entre la multiplexación y la demultiplexación en la capa de transporte?",
+    question: "¿Cuál es la diferencia fundamental entre la multiplexación y la demultiplexación en la capa de transporte?",
     options: [
       { id: "a", text: "Multiplexación comprime datos; demultiplexación los descomprime" },
       { id: "b", text: "Multiplexación combina datos de múltiples sockets en segmentos; demultiplexación entrega segmentos al socket correcto" },
@@ -87,8 +82,7 @@ export const quizCh3: QuizQuestion[] = [
   },
   {
     id: "ch3-q7",
-    question:
-      "En el protocolo rdt3.0 (transferencia confiable sobre canal con errores y pérdida), ¿qué mecanismo se añade respecto a rdt2.2?",
+    question: "En el protocolo rdt3.0, ¿qué mecanismo se añade respecto a rdt2.2?",
     options: [
       { id: "a", text: "Checksums para detectar errores" },
       { id: "b", text: "Números de secuencia para detectar duplicados" },
@@ -101,8 +95,7 @@ export const quizCh3: QuizQuestion[] = [
   },
   {
     id: "ch3-q8",
-    question:
-      "Si un archivo de 500,000 bytes se transmite usando TCP con MSS = 1,000 bytes, ¿cuántos segmentos se necesitan?",
+    question: "Si un archivo de 500,000 bytes se transmite usando TCP con MSS = 1,000 bytes, ¿cuántos segmentos se necesitan?",
     options: [
       { id: "a", text: "500 segmentos" },
       { id: "b", text: "499 segmentos" },
@@ -115,8 +108,7 @@ export const quizCh3: QuizQuestion[] = [
   },
   {
     id: "ch3-q9",
-    question:
-      "El campo 'ventana de recepción' (rwnd) en la cabecera TCP se usa para:",
+    question: "El campo 'ventana de recepción' (rwnd) en la cabecera TCP se usa para:",
     options: [
       { id: "a", text: "Control de congestión de la red" },
       { id: "b", text: "Control de flujo: indica cuánto espacio libre tiene el buffer del receptor" },
@@ -129,8 +121,7 @@ export const quizCh3: QuizQuestion[] = [
   },
   {
     id: "ch3-q10",
-    question:
-      "¿Por qué TCP necesita un three-way handshake en vez de un two-way handshake?",
+    question: "¿Por qué TCP necesita un three-way handshake en vez de un two-way handshake?",
     options: [
       { id: "a", text: "Para negociar el algoritmo de encriptación" },
       { id: "b", text: "Para que AMBOS lados confirmen sus números de secuencia iniciales y la capacidad de comunicación bidireccional" },
@@ -139,6 +130,136 @@ export const quizCh3: QuizQuestion[] = [
     ],
     correctAnswerId: "b",
     explanation:
-      "El three-way handshake es necesario porque: (1) SYN: el cliente envía su ISN, (2) SYN-ACK: el servidor confirma el ISN del cliente y envía su propio ISN, (3) ACK: el cliente confirma el ISN del servidor. Sin el tercer paso, el servidor no sabría si el cliente recibió su ISN. Además, evita el problema de conexiones duplicadas por segmentos SYN retrasados.",
+      "El three-way handshake es necesario porque: (1) SYN: el cliente envía su ISN, (2) SYN-ACK: el servidor confirma el ISN del cliente y envía su propio ISN, (3) ACK: el cliente confirma el ISN del servidor. Sin el tercer paso, el servidor no sabría si el cliente recibió su ISN.",
+  },
+  {
+    id: "ch3-q11",
+    question: "¿Cuál es la diferencia entre Go-Back-N (GBN) y Selective Repeat (SR) en protocolos de ventana deslizante?",
+    options: [
+      { id: "a", text: "GBN permite ventanas más grandes que SR" },
+      { id: "b", text: "SR usa UDP; GBN usa TCP" },
+      { id: "c", text: "GBN no necesita buffer en el receptor" },
+      { id: "d", text: "En GBN el receptor descarta paquetes fuera de orden; en SR los almacena en buffer para retransmitir solo el perdido" },
+    ],
+    correctAnswerId: "d",
+    explanation:
+      "En GBN, ante una pérdida, el emisor retransmite el paquete perdido Y todos los posteriores (incluso los que llegaron bien). El receptor descarta todo lo fuera de orden. En SR, el receptor almacena paquetes fuera de orden; solo se retransmite el paquete perdido. SR es más eficiente pero requiere más buffer.",
+  },
+  {
+    id: "ch3-q12",
+    question: "¿Qué ocurre con cwnd en TCP cuando expira el temporizador de retransmisión (timeout)?",
+    options: [
+      { id: "a", text: "cwnd = 1 MSS, ssthresh = cwnd/2 anterior, y entra en slow start desde 1" },
+      { id: "b", text: "La conexión se cierra y debe reiniciarse" },
+      { id: "c", text: "cwnd se mantiene igual pero ssthresh se actualiza" },
+      { id: "d", text: "cwnd se reduce a la mitad y entra en congestion avoidance" },
+    ],
+    correctAnswerId: "a",
+    explanation:
+      "Ante timeout (pérdida severa), TCP Tahoe y Reno reaccionan igual: ssthresh = cwnd/2, cwnd = 1 MSS, y entran en slow start desde 1. Esta reacción es más drástica que ante 3 ACKs duplicados (que en TCP Reno solo baja cwnd a ssthresh). Un timeout sugiere congestión severa o enlace caído.",
+  },
+  {
+    id: "ch3-q13",
+    question: "¿Cuántos bytes del header TCP son obligatorios (sin opciones)?",
+    options: [
+      { id: "a", text: "8 bytes (igual que UDP)" },
+      { id: "b", text: "16 bytes" },
+      { id: "c", text: "20 bytes" },
+      { id: "d", text: "40 bytes" },
+    ],
+    correctAnswerId: "c",
+    explanation:
+      "El header TCP mínimo (sin opciones) es de 20 bytes: puerto origen (2B), puerto destino (2B), número de secuencia (4B), número de ACK (4B), offset de datos/flags (2B), ventana (2B), checksum (2B), puntero urgente (2B) = 20 bytes. UDP solo tiene 8 bytes de header.",
+  },
+  {
+    id: "ch3-q14",
+    question: "En TCP, ¿cómo se cierra una conexión de forma ordenada?",
+    options: [
+      { id: "a", text: "El servidor envía un RST para terminar abruptamente" },
+      { id: "b", text: "Basta con que un lado envíe FIN para cerrar la conexión" },
+      { id: "c", text: "La conexión se cierra sola tras un periodo de inactividad" },
+      { id: "d", text: "Four-way handshake: FIN→ACK (semicierre), luego FIN→ACK del otro lado" },
+    ],
+    correctAnswerId: "d",
+    explanation:
+      "El cierre TCP usa 4 mensajes: (1) FIN del cliente, (2) ACK del servidor, (3) FIN del servidor cuando termina de enviar, (4) ACK del cliente. Entre el paso 2 y 3 el servidor puede seguir enviando datos (semicierre). Tras el FIN del servidor, el cliente espera 2×MSL (TIME_WAIT) antes de cerrar definitivamente.",
+  },
+  {
+    id: "ch3-q15",
+    question: "¿Cuál es la diferencia entre control de flujo y control de congestión en TCP?",
+    options: [
+      { id: "a", text: "Control de flujo evita sobrecargar al receptor; control de congestión evita sobrecargar la red" },
+      { id: "b", text: "Son el mismo mecanismo implementado con rwnd" },
+      { id: "c", text: "Control de flujo es para UDP; control de congestión para TCP" },
+      { id: "d", text: "Control de congestión evita sobrecargar al receptor; control de flujo evita sobrecargar la red" },
+    ],
+    correctAnswerId: "a",
+    explanation:
+      "Control de flujo (flow control): evita que el emisor sature el buffer del RECEPTOR. Mecanismo: rwnd en la cabecera TCP. Control de congestión: evita que el emisor sature los routers de la RED. Mecanismo: cwnd calculado por el emisor. La tasa de envío = min(rwnd, cwnd) / RTT.",
+  },
+  {
+    id: "ch3-q16",
+    question: "¿Qué es el ISN (Initial Sequence Number) en TCP y por qué es aleatorio?",
+    options: [
+      { id: "a", text: "El número máximo de bytes que puede enviar el emisor; es fijo para ser predecible" },
+      { id: "b", text: "El número de secuencia inicial de la conexión; es aleatorio para prevenir ataques de predicción de secuencia" },
+      { id: "c", text: "El identificador de la conexión TCP; es único por conexión pero predecible" },
+      { id: "d", text: "El número de ACK inicial; siempre empieza en 0" },
+    ],
+    correctAnswerId: "b",
+    explanation:
+      "El ISN es el número de secuencia del primer byte en la conexión TCP, enviado en el SYN. Se genera aleatoriamente para prevenir ataques donde un atacante adivina los números de secuencia e inyecta segmentos maliciosos en la conexión (TCP session hijacking). Además evita confusión con conexiones anteriores en el mismo puerto.",
+  },
+  {
+    id: "ch3-q17",
+    question: "En la fase de 'congestion avoidance' de TCP, ¿cómo crece cwnd?",
+    options: [
+      { id: "a", text: "Se duplica cada RTT (exponencial)" },
+      { id: "b", text: "Permanece constante hasta detectar pérdida" },
+      { id: "c", text: "Disminuye gradualmente para liberar ancho de banda" },
+      { id: "d", text: "Crece en 1 MSS por RTT (lineal/aditivo)" },
+    ],
+    correctAnswerId: "d",
+    explanation:
+      "En congestion avoidance (cuando cwnd ≥ ssthresh), TCP aumenta cwnd en 1 MSS por RTT (incremento aditivo). Esto produce crecimiento lineal, mucho más conservador que slow start. Junto con la reducción multiplicativa ante pérdida, forma el algoritmo AIMD (Additive Increase Multiplicative Decrease).",
+  },
+  {
+    id: "ch3-q18",
+    question: "¿Qué información contiene la cabecera UDP a diferencia de TCP?",
+    options: [
+      { id: "a", text: "Solo los puertos origen y destino — UDP no tiene checksum" },
+      { id: "b", text: "Puertos, número de secuencia y control de flujo" },
+      { id: "c", text: "Puerto origen, puerto destino, longitud y checksum (8 bytes total)" },
+      { id: "d", text: "Solo puerto destino y checksum — el puerto origen es opcional" },
+    ],
+    correctAnswerId: "c",
+    explanation:
+      "La cabecera UDP tiene exactamente 4 campos de 2 bytes cada uno = 8 bytes: (1) puerto origen, (2) puerto destino, (3) longitud (del segmento UDP completo), (4) checksum. La simplicidad de UDP hace que su overhead sea mínimo comparado con los 20+ bytes de TCP.",
+  },
+  {
+    id: "ch3-q19",
+    question: "¿Qué es el 'SYN flood attack' y qué lo hace posible?",
+    options: [
+      { id: "a", text: "Un ataque que explota la fase de congestion avoidance para maximizar el ancho de banda" },
+      { id: "b", text: "El atacante envía SYN masivos sin completar el handshake, agotando los recursos del servidor con conexiones semi-abiertas" },
+      { id: "c", text: "Un ataque que intercepta el ACK final del three-way handshake" },
+      { id: "d", text: "El atacante corrompe los números de secuencia para desincronizar la conexión" },
+    ],
+    correctAnswerId: "b",
+    explanation:
+      "En SYN flood, el atacante envía miles de SYN con IPs falsificadas. El servidor reserva recursos (buffers, estado) para cada conexión semi-abierta esperando el ACK final que nunca llega. Al agotarse los recursos, el servidor no puede aceptar conexiones legítimas (DoS). La solución moderna son los SYN cookies.",
+  },
+  {
+    id: "ch3-q20",
+    question: "Si TCP tiene cwnd = 8 MSS y ssthresh = 4 MSS y detecta 3 ACKs duplicados (TCP Reno), ¿cuál será el nuevo cwnd?",
+    options: [
+      { id: "a", text: "cwnd = 1 MSS, ssthresh = 4 MSS" },
+      { id: "b", text: "cwnd = 8 MSS (sin cambio, solo retransmite)" },
+      { id: "c", text: "cwnd = 2 MSS, ssthresh = 4 MSS" },
+      { id: "d", text: "cwnd = 4 MSS, ssthresh = 4 MSS (fast recovery)" },
+    ],
+    correctAnswerId: "d",
+    explanation:
+      "Con TCP Reno ante 3 ACKs duplicados: ssthresh = cwnd/2 = 8/2 = 4 MSS, cwnd = ssthresh = 4 MSS, entra en congestion avoidance. El ssthresh ya era 4, así que no cambia. TCP Tahoe ante el mismo evento bajaría cwnd a 1 MSS y entraría en slow start. Reno es más eficiente al no bajar tanto.",
   },
 ];

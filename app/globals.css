@@ -2,6 +2,7 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+/* ── Light theme ─────────────────────────────────────────── */
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
@@ -16,6 +17,7 @@
   --card: #ffffff;
 }
 
+/* ── Dark theme (GitHub-style) ───────────────────────────── */
 [data-theme="dark"] {
   --background: #0d1117;
   --foreground: #e6edf3;
@@ -28,8 +30,22 @@
   --muted: #8b949e;
   --border: #30363d;
   --card: #161b22;
+
+  /* Override Tailwind's internal --color-* so utility classes work dynamically */
+  --color-background: #0d1117;
+  --color-foreground: #e6edf3;
+  --color-primary: #79c0ff;
+  --color-primary-light: #58a6ff;
+  --color-accent: #58a6ff;
+  --color-accent-light: #79c0ff;
+  --color-success: #3fb950;
+  --color-error: #f85149;
+  --color-muted: #8b949e;
+  --color-border: #30363d;
+  --color-card: #161b22;
 }
 
+/* ── Tailwind theme tokens (light values — dark overrides above) ── */
 @theme inline {
   --color-background: #f8fafc;
   --color-foreground: #0f172a;
@@ -46,6 +62,11 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* ── Base styles ─────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -53,77 +74,21 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-/* Override Tailwind theme colors with CSS variables for dynamic theming */
-.bg-background { background-color: var(--background) !important; }
-.bg-foreground { background-color: var(--foreground) !important; }
-.bg-primary { background-color: var(--primary) !important; }
-.bg-primary-light { background-color: var(--primary-light) !important; }
-.bg-accent { background-color: var(--accent) !important; }
-.bg-accent-light { background-color: var(--accent-light) !important; }
-.bg-success { background-color: var(--success) !important; }
-.bg-error { background-color: var(--error) !important; }
-.bg-muted { background-color: var(--muted) !important; }
-.bg-border { background-color: var(--border) !important; }
-.bg-card { background-color: var(--card) !important; }
-
-.text-background { color: var(--background) !important; }
-.text-foreground { color: var(--foreground) !important; }
-.text-primary { color: var(--primary) !important; }
-.text-primary-light { color: var(--primary-light) !important; }
-.text-accent { color: var(--accent) !important; }
-.text-accent-light { color: var(--accent-light) !important; }
-.text-success { color: var(--success) !important; }
-.text-error { color: var(--error) !important; }
-.text-muted { color: var(--muted) !important; }
-
-.border-border { border-color: var(--border) !important; }
-.border-primary { border-color: var(--primary) !important; }
-.border-accent { border-color: var(--accent) !important; }
-
-/* Opacity variants */
-.bg-primary\/10 { background-color: color-mix(in srgb, var(--primary) 10%, transparent) !important; }
-.bg-primary\/5 { background-color: color-mix(in srgb, var(--primary) 5%, transparent) !important; }
-.bg-accent\/10 { background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
-.bg-accent\/5 { background-color: color-mix(in srgb, var(--accent) 5%, transparent) !important; }
-.bg-card\/80 { background-color: color-mix(in srgb, var(--card) 80%, transparent) !important; }
-.border-accent\/50 { border-color: color-mix(in srgb, var(--accent) 50%, transparent) !important; }
-.border-border\/50 { border-color: color-mix(in srgb, var(--border) 50%, transparent) !important; }
-.hover\:bg-card:hover { background-color: var(--card) !important; }
-.hover\:text-foreground:hover { color: var(--foreground) !important; }
-.hover\:border-border:hover { border-color: var(--border) !important; }
-.hover\:bg-primary\/90:hover { background-color: color-mix(in srgb, var(--primary) 90%, transparent) !important; }
-.hover\:bg-accent\/90:hover { background-color: color-mix(in srgb, var(--accent) 90%, transparent) !important; }
-.hover\:text-accent\/80:hover { color: color-mix(in srgb, var(--accent) 80%, transparent) !important; }
-
+/* ── Animations ──────────────────────────────────────────── */
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  50%       { opacity: 0.4; }
 }
 
 @keyframes packet-move {
-  0% { offset-distance: 0%; }
+  0%   { offset-distance: 0%; }
   100% { offset-distance: 100%; }
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out forwards;
-}
-
-.animate-pulse-dot {
-  animation: pulse-dot 2s ease-in-out infinite;
-}
+.animate-fade-in-up  { animation: fadeInUp 0.5s ease-out forwards; }
+.animate-pulse-dot   { animation: pulse-dot 2s ease-in-out infinite; }

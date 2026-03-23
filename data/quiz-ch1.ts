@@ -1,144 +1,245 @@
 import type { QuizQuestion } from "@/types/quiz";
 
+// Correct answers: b a d c a d b c a d c b a d b c a d b c
 export const quizCh1: QuizQuestion[] = [
   {
     id: "ch1-q1",
-    question:
-      "En la conmutación de paquetes, cuando un paquete llega a un router y el enlace de salida está ocupado, ¿qué sucede?",
+    question: "En la conmutación de paquetes, cuando un paquete llega a un router y el enlace de salida está ocupado, ¿qué sucede?",
     options: [
       { id: "a", text: "Es descartado inmediatamente" },
       { id: "b", text: "Espera en un buffer de salida (cola)" },
       { id: "c", text: "Se envía automáticamente por un enlace alternativo" },
-      { id: "d", text: "Se divide en paquetes más pequeños" },
+      { id: "d", text: "Se fragmenta en paquetes más pequeños" },
     ],
     correctAnswerId: "b",
-    explanation:
-      "En la conmutación de paquetes, los routers almacenan los paquetes en buffers de salida (colas) cuando el enlace está ocupado. Este mecanismo se llama store-and-forward. Si el buffer se llena, se produce pérdida de paquetes.",
+    explanation: "Store-and-forward: el router almacena el paquete completo y si el enlace está ocupado, lo encola en el buffer de salida. Solo si el buffer se llena ocurre pérdida de paquetes.",
   },
   {
     id: "ch1-q2",
-    question:
-      "¿Cuál de los siguientes NO es un componente del retardo total de un paquete en una red?",
+    question: "¿Cuál es la diferencia entre throughput y ancho de banda?",
     options: [
-      { id: "a", text: "Retardo de procesamiento" },
-      { id: "b", text: "Retardo de encriptación" },
-      { id: "c", text: "Retardo de cola" },
-      { id: "d", text: "Retardo de propagación" },
+      { id: "a", text: "El throughput es la tasa real de extremo a extremo; el ancho de banda es la capacidad máxima del enlace" },
+      { id: "b", text: "Son términos sinónimos" },
+      { id: "c", text: "El ancho de banda mide retardo; el throughput mide capacidad" },
+      { id: "d", text: "El throughput siempre supera al ancho de banda" },
     ],
-    correctAnswerId: "b",
-    explanation:
-      "Los cuatro componentes del retardo nodal son: procesamiento (verificar errores, determinar enlace de salida), cola (espera en el buffer), transmisión (poner bits en el enlace) y propagación (viaje físico por el medio). La encriptación no es parte del modelo de retardo estándar.",
+    correctAnswerId: "a",
+    explanation: "El ancho de banda es la capacidad nominal del enlace en bps. El throughput es la tasa real observada de extremo a extremo, siempre ≤ al cuello de botella de la ruta y afectado por pérdidas y retransmisiones.",
   },
   {
     id: "ch1-q3",
-    question:
-      "El throughput de extremo a extremo está determinado por:",
+    question: "Un archivo de 8 Mb se envía por un enlace de 2 Mbps. ¿Cuánto tarda la transmisión?",
     options: [
-      { id: "a", text: "El enlace más rápido de la ruta" },
-      { id: "b", text: "El enlace cuello de botella (más lento)" },
-      { id: "c", text: "La suma de todos los enlaces" },
-      { id: "d", text: "El primer enlace de la ruta" },
+      { id: "a", text: "2 segundos" },
+      { id: "b", text: "8 segundos" },
+      { id: "c", text: "16 segundos" },
+      { id: "d", text: "4 segundos" },
     ],
-    correctAnswerId: "b",
-    explanation:
-      "El throughput de extremo a extremo está limitado por el enlace con menor capacidad en la ruta, conocido como enlace cuello de botella (bottleneck link). Es como una tubería: el caudal máximo está determinado por la sección más estrecha.",
+    correctAnswerId: "d",
+    explanation: "Retardo de transmisión = L/R = 8×10⁶ bits / 2×10⁶ bps = 4 segundos. Es el tiempo en colocar el último bit en el enlace.",
   },
   {
     id: "ch1-q4",
-    question:
-      "¿Cuál es la principal ventaja de la conmutación de circuitos sobre la conmutación de paquetes?",
+    question: "¿Qué protocolo enruta datagramas de host a host atravesando múltiples routers?",
     options: [
-      { id: "a", text: "Mayor eficiencia en el uso del ancho de banda" },
-      { id: "b", text: "Rendimiento garantizado (ancho de banda reservado)" },
-      { id: "c", text: "Menor costo de infraestructura" },
-      { id: "d", text: "Mayor número de usuarios simultáneos" },
+      { id: "a", text: "TCP" },
+      { id: "b", text: "Ethernet" },
+      { id: "c", text: "HTTP" },
+      { id: "d", text: "IP" },
     ],
-    correctAnswerId: "b",
-    explanation:
-      "La conmutación de circuitos reserva recursos de extremo a extremo durante toda la comunicación, garantizando un rendimiento constante. Sin embargo, esto es menos eficiente porque los recursos se desperdician si no se usan activamente (periodos de silencio).",
+    correctAnswerId: "d",
+    explanation: "IP (Internet Protocol) opera en la capa de red y es responsable del direccionamiento lógico y el enrutamiento de datagramas. TCP opera en transporte y garantiza entrega confiable entre procesos.",
   },
   {
     id: "ch1-q5",
-    question:
-      "En el modelo de capas TCP/IP de 5 capas, ¿cuál es la PDU (unidad de datos de protocolo) de la capa de transporte?",
+    question: "¿Cuál de estos retardos depende directamente de la distancia física entre origen y destino?",
     options: [
-      { id: "a", text: "Mensaje" },
-      { id: "b", text: "Segmento" },
-      { id: "c", text: "Datagrama" },
-      { id: "d", text: "Trama" },
+      { id: "a", text: "Retardo de propagación" },
+      { id: "b", text: "Retardo de transmisión" },
+      { id: "c", text: "Retardo de procesamiento" },
+      { id: "d", text: "Retardo de cola" },
     ],
-    correctAnswerId: "b",
-    explanation:
-      "Cada capa tiene su propia PDU: Aplicación → Mensaje, Transporte → Segmento, Red → Datagrama, Enlace → Trama, Física → Bits. El segmento contiene el mensaje de la capa de aplicación más la cabecera de transporte (TCP o UDP).",
+    correctAnswerId: "a",
+    explanation: "Retardo de propagación = d/s (distancia / velocidad de la señal ≈ 2×10⁸ m/s). Es independiente del tamaño del paquete y de la velocidad del enlace.",
   },
   {
     id: "ch1-q6",
-    question:
-      "¿Qué tipo de tecnología de acceso ofrece típicamente el mayor ancho de banda al usuario final?",
+    question: "En conmutación de circuitos, cuando no se transmiten datos activamente, los recursos reservados:",
     options: [
-      { id: "a", text: "DSL (Digital Subscriber Line)" },
-      { id: "b", text: "Cable Coaxial (HFC)" },
-      { id: "c", text: "FTTH (Fiber To The Home)" },
-      { id: "d", text: "Acceso celular 4G" },
+      { id: "a", text: "Se liberan temporalmente para otros usuarios" },
+      { id: "b", text: "Se reducen automáticamente" },
+      { id: "c", text: "Se asignan a la siguiente llamada" },
+      { id: "d", text: "Permanecen ocupados y se desperdician" },
     ],
-    correctAnswerId: "c",
-    explanation:
-      "FTTH (Fibra hasta el hogar) ofrece las velocidades más altas, típicamente de 1 Gbps o más, porque la fibra óptica tiene un enorme ancho de banda. DSL está limitado por la distancia al central, y el cable coaxial comparte el medio entre vecinos.",
+    correctAnswerId: "d",
+    explanation: "La principal desventaja de la conmutación de circuitos: los recursos se reservan para toda la duración de la comunicación. En silencio quedan ociosos, a diferencia de la conmutación de paquetes con multiplexación estadística.",
   },
   {
     id: "ch1-q7",
-    question:
-      "El retardo de transmisión depende de:",
+    question: "¿Qué componente del retardo nodal varía más según el nivel de tráfico?",
     options: [
-      { id: "a", text: "La distancia física entre los nodos" },
-      { id: "b", text: "El tamaño del paquete y la tasa de transmisión del enlace" },
-      { id: "c", text: "La velocidad de propagación del medio" },
-      { id: "d", text: "El número de routers en la ruta" },
+      { id: "a", text: "Retardo de procesamiento" },
+      { id: "b", text: "Retardo de cola" },
+      { id: "c", text: "Retardo de transmisión" },
+      { id: "d", text: "Retardo de propagación" },
     ],
     correctAnswerId: "b",
-    explanation:
-      "El retardo de transmisión = L/R, donde L es el tamaño del paquete en bits y R es la tasa de transmisión del enlace en bits por segundo. Es el tiempo necesario para 'empujar' todos los bits del paquete al enlace. No depende de la distancia (eso es propagación).",
+    explanation: "El retardo de cola depende del número de paquetes en el buffer de salida. A mayor tráfico (intensidad de tráfico ρ → 1), crece exponencialmente y puede volverse impredecible.",
   },
   {
     id: "ch1-q8",
-    question:
-      "¿Qué principio de diseño describe el concepto de que la complejidad debe estar en los bordes de la red (hosts) y no en el núcleo?",
+    question: "¿Cuál es la PDU de la capa de transporte en TCP?",
     options: [
-      { id: "a", text: "Principio de Pareto" },
-      { id: "b", text: "Principio de extremo a extremo (end-to-end principle)" },
-      { id: "c", text: "Principio de mínimo privilegio" },
-      { id: "d", text: "Ley de Moore" },
+      { id: "a", text: "Trama" },
+      { id: "b", text: "Datagrama IP" },
+      { id: "c", text: "Segmento" },
+      { id: "d", text: "Mensaje" },
     ],
-    correctAnswerId: "b",
-    explanation:
-      "El principio end-to-end establece que las funciones específicas de la aplicación deben implementarse en los sistemas finales, no en los routers intermedios. Esto mantiene el núcleo de la red simple y general, permitiendo que funcione con cualquier aplicación.",
+    correctAnswerId: "c",
+    explanation: "PDUs por capa: Aplicación→Mensaje, Transporte→Segmento (TCP) o Datagrama UDP, Red→Datagrama IP, Enlace→Trama, Física→Bits.",
   },
   {
     id: "ch1-q9",
-    question:
-      "¿Qué sucede durante el proceso de encapsulamiento cuando los datos bajan por las capas del modelo?",
+    question: "En una ruta con enlaces de 100 Mbps, 10 Mbps y 50 Mbps, ¿cuál es el throughput máximo?",
     options: [
-      { id: "a", text: "Cada capa elimina una cabecera de los datos" },
-      { id: "b", text: "Cada capa añade su propia cabecera a los datos" },
-      { id: "c", text: "Los datos se comprimen en cada capa" },
-      { id: "d", text: "Los datos se encriptan en cada capa" },
+      { id: "a", text: "10 Mbps: el enlace cuello de botella limita todo" },
+      { id: "b", text: "53.3 Mbps: el promedio" },
+      { id: "c", text: "100 Mbps: el más rápido domina" },
+      { id: "d", text: "160 Mbps: la suma" },
     ],
-    correctAnswerId: "b",
-    explanation:
-      "El encapsulamiento es el proceso donde cada capa añade su propia cabecera (y a veces un trailer, como en la capa de enlace) a los datos que recibe de la capa superior. Así, un mensaje se convierte en segmento, luego datagrama, luego trama, y finalmente bits.",
+    correctAnswerId: "a",
+    explanation: "El throughput de extremo a extremo está limitado por el enlace más lento (cuello de botella). Con 10 Mbps como mínimo, el throughput máximo es 10 Mbps.",
   },
   {
     id: "ch1-q10",
-    question:
-      "Si un enlace tiene una tasa de transmisión de 1 Gbps y se transmite un paquete de 10,000 bits, ¿cuál es el retardo de transmisión?",
+    question: "Enviando un paquete por 3 routers con store-and-forward, ¿cuántos retardos de transmisión hay en total?",
     options: [
-      { id: "a", text: "10 microsegundos" },
-      { id: "b", text: "10 nanosegundos" },
-      { id: "c", text: "0.01 milisegundos" },
-      { id: "d", text: "1 microsegundo" },
+      { id: "a", text: "1" },
+      { id: "b", text: "3" },
+      { id: "c", text: "2" },
+      { id: "d", text: "4" },
+    ],
+    correctAnswerId: "d",
+    explanation: "Con 3 routers intermedios hay 4 enlaces (origen→R1, R1→R2, R2→R3, R3→destino). Cada enlace requiere un retardo de transmisión L/R: 4 retardos en total.",
+  },
+  {
+    id: "ch1-q11",
+    question: "¿Qué tecnología divide el espectro de la línea telefónica de cobre para voz e Internet simultáneos?",
+    options: [
+      { id: "a", text: "FTTH" },
+      { id: "b", text: "Cable HFC" },
+      { id: "c", text: "DSL (Digital Subscriber Line)" },
+      { id: "d", text: "Ethernet Gigabit" },
+    ],
+    correctAnswerId: "c",
+    explanation: "DSL usa el par trenzado existente y divide el espectro: ~4 kHz para voz telefónica, frecuencias superiores para datos de bajada (hasta 1 MHz) y subida. Permite telefonía e Internet simultáneos.",
+  },
+  {
+    id: "ch1-q12",
+    question: "¿Cuál de estos NO es un componente del retardo nodal definido por Kurose?",
+    options: [
+      { id: "a", text: "Retardo de procesamiento" },
+      { id: "b", text: "Retardo de cifrado" },
+      { id: "c", text: "Retardo de cola" },
+      { id: "d", text: "Retardo de transmisión" },
+    ],
+    correctAnswerId: "b",
+    explanation: "Los cuatro componentes del retardo nodal son: procesamiento, cola, transmisión y propagación. El cifrado pertenece a la capa de seguridad y no es parte del retardo nodal de la capa de red.",
+  },
+  {
+    id: "ch1-q13",
+    question: "¿Por qué la conmutación de paquetes es más eficiente para tráfico en ráfagas?",
+    options: [
+      { id: "a", text: "Comparte el ancho de banda con multiplexación estadística" },
+      { id: "b", text: "Garantiza latencia constante" },
+      { id: "c", text: "Reserva recursos para cada flujo" },
+      { id: "d", text: "Siempre ofrece menor latencia" },
     ],
     correctAnswerId: "a",
-    explanation:
-      "d_trans = L/R = 10,000 bits / 1,000,000,000 bps = 10 × 10⁻⁶ segundos = 10 microsegundos. Nota: 10 microsegundos = 0.01 milisegundos, por lo que la opción (c) también sería correcta numéricamente, pero la respuesta más precisa es 10 μs.",
+    explanation: "La multiplexación estadística permite que el ancho de banda se comparta dinámicamente: cuando un flujo no transmite, otros usan esa capacidad. Resultado: mayor eficiencia que circuitos dedicados.",
+  },
+  {
+    id: "ch1-q14",
+    question: "¿Qué es el encapsulamiento en el modelo de capas?",
+    options: [
+      { id: "a", text: "Comprimir datos antes de transmitirlos" },
+      { id: "b", text: "Separar datos de control en paquetes distintos" },
+      { id: "c", text: "Cifrar la cabecera de cada paquete" },
+      { id: "d", text: "Cada capa agrega su cabecera envolviendo los datos de la capa superior" },
+    ],
+    correctAnswerId: "d",
+    explanation: "En el encapsulamiento cada capa trata los datos de la capa superior como payload opaco y les añade su propia cabecera. Ejemplo: mensaje HTTP → segmento TCP → datagrama IP → trama Ethernet → bits.",
+  },
+  {
+    id: "ch1-q15",
+    question: "Con velocidad de propagación 2×10⁸ m/s y distancia 4000 km, ¿cuál es el retardo de propagación?",
+    options: [
+      { id: "a", text: "0.2 segundos" },
+      { id: "b", text: "20 ms" },
+      { id: "c", text: "200 ms" },
+      { id: "d", text: "2 ms" },
+    ],
+    correctAnswerId: "b",
+    explanation: "d/s = 4×10⁶ m / 2×10⁸ m/s = 0.02 s = 20 ms. Este valor determina el RTT mínimo posible entre dos puntos geográficos.",
+  },
+  {
+    id: "ch1-q16",
+    question: "¿Qué capa convierte bits en señales eléctricas u ópticas para el medio físico?",
+    options: [
+      { id: "a", text: "Capa de red" },
+      { id: "b", text: "Capa de transporte" },
+      { id: "c", text: "Capa física" },
+      { id: "d", text: "Capa de enlace" },
+    ],
+    correctAnswerId: "c",
+    explanation: "La capa física interactúa directamente con el medio. Convierte bits en señales (voltajes eléctricos, pulsos de luz, ondas de radio) y define las características del medio de transmisión.",
+  },
+  {
+    id: "ch1-q17",
+    question: "¿Por qué Internet se describe como una red de redes?",
+    options: [
+      { id: "a", text: "Miles de ISPs y redes autónomas interconectadas con protocolos comunes" },
+      { id: "b", text: "Usa múltiples protocolos de transporte en paralelo" },
+      { id: "c", text: "Es administrada por una organización central" },
+      { id: "d", text: "Solo conecta redes del mismo tipo" },
+    ],
+    correctAnswerId: "a",
+    explanation: "Internet es una red de redes porque consiste en miles de redes autónomas (ISPs de distintos niveles, redes empresariales y universitarias) interconectadas gracias a protocolos estándar abiertos como IP.",
+  },
+  {
+    id: "ch1-q18",
+    question: "¿Qué medio ofrece mayor ancho de banda, menor atenuación e inmunidad a interferencias electromagnéticas?",
+    options: [
+      { id: "a", text: "Par trenzado UTP" },
+      { id: "b", text: "Cable coaxial" },
+      { id: "c", text: "Radio 5G" },
+      { id: "d", text: "Fibra óptica" },
+    ],
+    correctAnswerId: "d",
+    explanation: "La fibra óptica transmite pulsos de luz: ancho de banda de terabits/s, baja atenuación (cientos de km sin repetidor) e inmunidad total a interferencias. Es el estándar para el backbone de Internet.",
+  },
+  {
+    id: "ch1-q19",
+    question: "Según Kurose, ¿qué define completamente un protocolo de red?",
+    options: [
+      { id: "a", text: "Solo el formato de los mensajes" },
+      { id: "b", text: "El formato, el orden de los mensajes y las acciones al enviarlos o recibirlos" },
+      { id: "c", text: "El medio físico y la velocidad de transmisión" },
+      { id: "d", text: "Los algoritmos de enrutamiento" },
+    ],
+    correctAnswerId: "b",
+    explanation: "Un protocolo define: (1) el formato y sintaxis de mensajes, (2) la semántica de los campos, (3) el orden de los mensajes, y (4) las acciones a tomar al transmitir o recibir. Los cuatro elementos son necesarios para la interoperabilidad.",
+  },
+  {
+    id: "ch1-q20",
+    question: "Si llegan 100 paquetes/s de 1000 bits c/u a un enlace de 50 Kbps, ¿qué ocurre?",
+    options: [
+      { id: "a", text: "El enlace tiene capacidad de sobra (ρ = 0.5)" },
+      { id: "b", text: "El enlace está al 50% — sin congestión" },
+      { id: "c", text: "La cola crece indefinidamente porque ρ = 2 > 1" },
+      { id: "d", text: "El enlace está exactamente al 100%" },
+    ],
+    correctAnswerId: "c",
+    explanation: "ρ = La/R = (1000 bits × 100 paquetes/s) / 50,000 bps = 100,000 / 50,000 = 2. Como ρ > 1 los paquetes llegan más rápido de lo que se transmiten: la cola crece sin límite y se producen pérdidas masivas.",
   },
 ];
