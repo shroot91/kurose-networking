@@ -65,4 +65,22 @@ export const chapters: Chapter[] = [
       { id: "quiz", title: "Quiz del Capítulo" },
     ],
   },
+  {
+    number: 4,
+    title: "Capa de Red",
+    slug: "capitulo-4",
+    description: "IPv4, IPv6, direccionamiento, CIDR, NAT, DHCP, algoritmos de enrutamiento (Dijkstra, Bellman-Ford) y protocolos BGP, OSPF.",
+    color: "from-violet-600 to-violet-800",
+    colorLight: "bg-violet-50 text-violet-800 border-violet-200 dark:bg-violet-950/30 dark:text-violet-300 dark:border-violet-800",
+    icon: "Network",
+    sections: [
+      { id: "introduccion-red", title: "Introducción a la Capa de Red" },
+      { id: "inside-router", title: "Arquitectura de un Router" },
+      { id: "ipv4", title: "IPv4: Direccionamiento" },
+      { id: "nat-dhcp", title: "NAT y DHCP" },
+      { id: "ipv6", title: "IPv6" },
+      { id: "enrutamiento", title: "Algoritmos de Enrutamiento" },
+      { id: "quiz", title: "Quiz del Capítulo" },
+    ],
+  },
 ];
