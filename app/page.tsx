@@ -1,65 +1,112 @@
-import Image from "next/image";
+import Link from "next/link";
+import { chapters } from "@/data/chapters";
+import { Globe, AppWindow, ArrowLeftRight, BookOpen } from "lucide-react";
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Globe,
+  AppWindow,
+  ArrowLeftRight,
+};
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div>
+      {/* Hero */}
+      <div className="bg-gradient-to-br from-primary to-slate-900 text-white py-20 px-4 sm:px-6">
+        <div className="mx-auto max-w-4xl text-center">
+          <div className="flex justify-center mb-6">
+            <div className="rounded-full bg-white/10 p-4">
+              <BookOpen className="h-10 w-10 text-accent-light" />
+            </div>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+            Redes de Computadoras
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-xl text-white/70 max-w-2xl mx-auto mb-2">
+            Aprende redes de forma interactiva y visual
+          </p>
+          <p className="text-sm text-white/50">
+            Basado en &quot;Computer Networking: A Top-Down Approach&quot; — Kurose &amp; Ross
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+
+      {/* Chapters grid */}
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16">
+        <h2 className="text-2xl font-bold text-center mb-10">Módulos de Estudio</h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {chapters.map((ch) => {
+            const Icon = iconMap[ch.icon] || Globe;
+            return (
+              <Link
+                key={ch.slug}
+                href={`/${ch.slug}`}
+                className="group block rounded-2xl border border-border bg-card p-6 shadow-sm hover:shadow-md transition-all hover:-translate-y-1"
+              >
+                <div
+                  className={`inline-flex rounded-xl bg-gradient-to-r ${ch.color} p-3 text-white mb-4`}
+                >
+                  <Icon className="h-6 w-6" />
+                </div>
+                <p className="text-xs font-semibold text-muted uppercase tracking-wider mb-1">
+                  Capítulo {ch.number}
+                </p>
+                <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary-light transition-colors">
+                  {ch.title}
+                </h3>
+                <p className="text-sm text-muted leading-relaxed">{ch.description}</p>
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  {ch.sections.slice(0, -1).map((s) => (
+                    <span
+                      key={s.id}
+                      className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-muted"
+                    >
+                      {s.title}
+                    </span>
+                  ))}
+                </div>
+              </Link>
+            );
+          })}
         </div>
-      </main>
+
+        {/* Features */}
+        <div className="mt-20 grid gap-8 sm:grid-cols-3 text-center">
+          <div>
+            <div className="inline-flex rounded-full bg-blue-100 p-3 mb-3">
+              <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 className="font-semibold mb-1">Diagramas Interactivos</h3>
+            <p className="text-sm text-muted">
+              Visualiza protocolos, paquetes y arquitecturas con animaciones paso a paso
+            </p>
+          </div>
+          <div>
+            <div className="inline-flex rounded-full bg-emerald-100 p-3 mb-3">
+              <svg className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="font-semibold mb-1">Ejemplos Completos</h3>
+            <p className="text-sm text-muted">
+              Cada concepto incluye ejemplos resueltos con cálculos detallados
+            </p>
+          </div>
+          <div>
+            <div className="inline-flex rounded-full bg-orange-100 p-3 mb-3">
+              <svg className="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="font-semibold mb-1">Cuestionarios</h3>
+            <p className="text-sm text-muted">
+              Evalúa tu comprensión con quizzes interactivos al final de cada capítulo
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
