@@ -32,7 +32,7 @@ export function QuizContainer({ questions, chapterTitle }: QuizContainerProps) {
       </div>
 
       {/* Progress bar */}
-      <div className="w-full bg-slate-100 rounded-full h-2">
+      <div className="w-full bg-slate-100 dark:bg-white/10 rounded-full h-2">
         <div
           className="bg-accent h-2 rounded-full transition-all duration-500"
           style={{ width: `${(quiz.revealed.size / quiz.totalQuestions) * 100}%` }}

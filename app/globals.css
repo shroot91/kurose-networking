@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
@@ -14,18 +16,32 @@
   --card: #ffffff;
 }
 
+[data-theme="dark"] {
+  --background: #0d1117;
+  --foreground: #e6edf3;
+  --primary: #79c0ff;
+  --primary-light: #58a6ff;
+  --accent: #58a6ff;
+  --accent-light: #79c0ff;
+  --success: #3fb950;
+  --error: #f85149;
+  --muted: #8b949e;
+  --border: #30363d;
+  --card: #161b22;
+}
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-light: var(--primary-light);
-  --color-accent: var(--accent);
-  --color-accent-light: var(--accent-light);
-  --color-success: var(--success);
-  --color-error: var(--error);
-  --color-muted: var(--muted);
-  --color-border: var(--border);
-  --color-card: var(--card);
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
+  --color-primary: #1e3a5f;
+  --color-primary-light: #2563eb;
+  --color-accent: #0891b2;
+  --color-accent-light: #22d3ee;
+  --color-success: #16a34a;
+  --color-error: #dc2626;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-card: #ffffff;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -34,11 +50,54 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 html {
   scroll-behavior: smooth;
 }
+
+/* Override Tailwind theme colors with CSS variables for dynamic theming */
+.bg-background { background-color: var(--background) !important; }
+.bg-foreground { background-color: var(--foreground) !important; }
+.bg-primary { background-color: var(--primary) !important; }
+.bg-primary-light { background-color: var(--primary-light) !important; }
+.bg-accent { background-color: var(--accent) !important; }
+.bg-accent-light { background-color: var(--accent-light) !important; }
+.bg-success { background-color: var(--success) !important; }
+.bg-error { background-color: var(--error) !important; }
+.bg-muted { background-color: var(--muted) !important; }
+.bg-border { background-color: var(--border) !important; }
+.bg-card { background-color: var(--card) !important; }
+
+.text-background { color: var(--background) !important; }
+.text-foreground { color: var(--foreground) !important; }
+.text-primary { color: var(--primary) !important; }
+.text-primary-light { color: var(--primary-light) !important; }
+.text-accent { color: var(--accent) !important; }
+.text-accent-light { color: var(--accent-light) !important; }
+.text-success { color: var(--success) !important; }
+.text-error { color: var(--error) !important; }
+.text-muted { color: var(--muted) !important; }
+
+.border-border { border-color: var(--border) !important; }
+.border-primary { border-color: var(--primary) !important; }
+.border-accent { border-color: var(--accent) !important; }
+
+/* Opacity variants */
+.bg-primary\/10 { background-color: color-mix(in srgb, var(--primary) 10%, transparent) !important; }
+.bg-primary\/5 { background-color: color-mix(in srgb, var(--primary) 5%, transparent) !important; }
+.bg-accent\/10 { background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
+.bg-accent\/5 { background-color: color-mix(in srgb, var(--accent) 5%, transparent) !important; }
+.bg-card\/80 { background-color: color-mix(in srgb, var(--card) 80%, transparent) !important; }
+.border-accent\/50 { border-color: color-mix(in srgb, var(--accent) 50%, transparent) !important; }
+.border-border\/50 { border-color: color-mix(in srgb, var(--border) 50%, transparent) !important; }
+.hover\:bg-card:hover { background-color: var(--card) !important; }
+.hover\:text-foreground:hover { color: var(--foreground) !important; }
+.hover\:border-border:hover { border-color: var(--border) !important; }
+.hover\:bg-primary\/90:hover { background-color: color-mix(in srgb, var(--primary) 90%, transparent) !important; }
+.hover\:bg-accent\/90:hover { background-color: color-mix(in srgb, var(--accent) 90%, transparent) !important; }
+.hover\:text-accent\/80:hover { color: color-mix(in srgb, var(--accent) 80%, transparent) !important; }
 
 @keyframes fadeInUp {
   from {
@@ -56,15 +115,15 @@ html {
   50% { opacity: 0.4; }
 }
 
+@keyframes packet-move {
+  0% { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 0.5s ease-out forwards;
 }
 
 .animate-pulse-dot {
   animation: pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes packet-move {
-  0% { offset-distance: 0%; }
-  100% { offset-distance: 100%; }
 }

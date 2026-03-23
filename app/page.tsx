@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <div className="bg-gradient-to-br from-primary to-slate-900 text-white py-20 px-4 sm:px-6">
+      <div className="bg-gradient-to-br from-primary to-slate-900 dark:from-[#161b22] dark:to-[#0d1117] text-white py-20 px-4 sm:px-6">
         <div className="mx-auto max-w-4xl text-center">
           <div className="flex justify-center mb-6">
             <div className="rounded-full bg-white/10 p-4">
@@ -33,7 +33,7 @@ export default function Home() {
 
       {/* Chapters grid */}
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16">
-        <h2 className="text-2xl font-bold text-center mb-10">Módulos de Estudio</h2>
+        <h2 className="text-2xl font-bold text-center mb-10 text-foreground">Módulos de Estudio</h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {chapters.map((ch) => {
             const Icon = iconMap[ch.icon] || Globe;
@@ -59,7 +59,7 @@ export default function Home() {
                   {ch.sections.slice(0, -1).map((s) => (
                     <span
                       key={s.id}
-                      className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-muted"
+                      className="text-xs px-2 py-0.5 rounded-full bg-background text-muted"
                     >
                       {s.title}
                     </span>
@@ -73,34 +73,34 @@ export default function Home() {
         {/* Features */}
         <div className="mt-20 grid gap-8 sm:grid-cols-3 text-center">
           <div>
-            <div className="inline-flex rounded-full bg-blue-100 p-3 mb-3">
-              <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="inline-flex rounded-full bg-blue-100 dark:bg-blue-900/30 p-3 mb-3">
+              <svg className="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h3 className="font-semibold mb-1">Diagramas Interactivos</h3>
+            <h3 className="font-semibold text-foreground mb-1">Diagramas Interactivos</h3>
             <p className="text-sm text-muted">
               Visualiza protocolos, paquetes y arquitecturas con animaciones paso a paso
             </p>
           </div>
           <div>
-            <div className="inline-flex rounded-full bg-emerald-100 p-3 mb-3">
-              <svg className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="inline-flex rounded-full bg-emerald-100 dark:bg-emerald-900/30 p-3 mb-3">
+              <svg className="h-6 w-6 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="font-semibold mb-1">Ejemplos Completos</h3>
+            <h3 className="font-semibold text-foreground mb-1">Ejemplos Completos</h3>
             <p className="text-sm text-muted">
               Cada concepto incluye ejemplos resueltos con cálculos detallados
             </p>
           </div>
           <div>
-            <div className="inline-flex rounded-full bg-orange-100 p-3 mb-3">
-              <svg className="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="inline-flex rounded-full bg-orange-100 dark:bg-orange-900/30 p-3 mb-3">
+              <svg className="h-6 w-6 text-orange-600 dark:text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="font-semibold mb-1">Cuestionarios</h3>
+            <h3 className="font-semibold text-foreground mb-1">Cuestionarios</h3>
             <p className="text-sm text-muted">
               Evalúa tu comprensión con quizzes interactivos al final de cada capítulo
             </p>

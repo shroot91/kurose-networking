@@ -8,7 +8,7 @@ export function ComparisonTable({ headers, rows }: ComparisonTableProps) {
     <div className="overflow-x-auto rounded-xl border border-border">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-slate-50">
+          <tr className="bg-slate-50 dark:bg-white/5">
             {headers.map((h, i) => (
               <th
                 key={i}
@@ -21,7 +21,7 @@ export function ComparisonTable({ headers, rows }: ComparisonTableProps) {
         </thead>
         <tbody>
           {rows.map((row, ri) => (
-            <tr key={ri} className="border-b border-border last:border-0 hover:bg-slate-50">
+            <tr key={ri} className="border-b border-border last:border-0 hover:bg-slate-50 dark:hover:bg-white/5">
               {row.map((cell, ci) => (
                 <td key={ci} className="px-4 py-3 text-muted">
                   {cell}

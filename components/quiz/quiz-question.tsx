@@ -32,12 +32,12 @@ export function QuizQuestionCard({
           const isSelected = selectedAnswer === option.id;
           const isCorrect = option.id === question.correctAnswerId;
 
-          let style = "border-border hover:border-accent/50 hover:bg-slate-50 cursor-pointer";
+          let style = "border-border hover:border-accent/50 hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer";
           if (isRevealed) {
             if (isCorrect) {
-              style = "border-green-400 bg-green-50";
+              style = "border-green-400 bg-green-50 dark:border-green-600 dark:bg-green-950/30";
             } else if (isSelected && !isCorrect) {
-              style = "border-red-400 bg-red-50";
+              style = "border-red-400 bg-red-50 dark:border-red-600 dark:bg-red-950/30";
             } else {
               style = "border-border opacity-60";
             }
@@ -62,7 +62,7 @@ export function QuizQuestionCard({
                     ? "border-green-500 bg-green-500 text-white"
                     : isRevealed && isSelected && !isCorrect
                     ? "border-red-500 bg-red-500 text-white"
-                    : "border-slate-300 text-muted"
+                    : "border-slate-300 dark:border-slate-600 text-muted"
                 )}
               >
                 {isRevealed && isCorrect ? (
@@ -73,15 +73,15 @@ export function QuizQuestionCard({
                   option.id.toUpperCase()
                 )}
               </span>
-              <span className="text-sm leading-relaxed">{option.text}</span>
+              <span className="text-sm leading-relaxed text-foreground">{option.text}</span>
             </button>
           );
         })}
       </div>
 
       {isRevealed && (
-        <div className="rounded-lg bg-blue-50 border border-blue-200 p-4 animate-fade-in-up">
-          <p className="text-sm text-blue-800 leading-relaxed">
+        <div className="rounded-lg bg-blue-50 border border-blue-200 dark:bg-blue-950/30 dark:border-blue-800 p-4 animate-fade-in-up">
+          <p className="text-sm text-blue-800 dark:text-blue-300 leading-relaxed">
             <span className="font-semibold">Explicación: </span>
             {question.explanation}
           </p>

@@ -24,7 +24,7 @@ export function SectionNav({ sections }: SectionNavProps) {
                 "block pl-4 py-1.5 text-sm transition-colors border-l-2 -ml-[2px]",
                 activeId === section.id
                   ? "border-accent text-accent font-medium"
-                  : "border-transparent text-muted hover:text-foreground hover:border-slate-300"
+                  : "border-transparent text-muted hover:text-foreground hover:border-border"
               )}
             >
               {section.title}

@@ -4,15 +4,15 @@ import { Info, AlertTriangle, Lightbulb } from "lucide-react";
 const variants = {
   info: {
     icon: Info,
-    style: "bg-blue-50 border-blue-200 text-blue-800",
+    style: "bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950/30 dark:border-blue-800 dark:text-blue-300",
   },
   warning: {
     icon: AlertTriangle,
-    style: "bg-red-50 border-red-200 text-red-800",
+    style: "bg-red-50 border-red-200 text-red-800 dark:bg-red-950/30 dark:border-red-800 dark:text-red-300",
   },
   tip: {
     icon: Lightbulb,
-    style: "bg-emerald-50 border-emerald-200 text-emerald-800",
+    style: "bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950/30 dark:border-emerald-800 dark:text-emerald-300",
   },
 };
 

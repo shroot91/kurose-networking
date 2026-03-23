@@ -32,7 +32,7 @@ export function ChapterLayout({ chapter, children }: ChapterLayoutProps) {
       </div>
 
       {/* Chapter navigation */}
-      <div className="border-t border-border bg-white">
+      <div className="border-t border-border bg-card">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 py-6 flex justify-between">
           {prevChapter ? (
             <Link

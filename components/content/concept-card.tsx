@@ -11,7 +11,7 @@ interface ConceptCardProps {
 export function ConceptCard({
   title,
   icon: Icon,
-  color = "bg-blue-50 text-blue-700 border-blue-200",
+  color = "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800",
   children,
 }: ConceptCardProps) {
   return (

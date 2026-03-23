@@ -36,7 +36,7 @@ export function QuizResult({
         <div className="inline-flex rounded-full bg-accent/10 p-4 mb-4">
           <Trophy className="h-8 w-8 text-accent" />
         </div>
-        <h3 className="text-2xl font-bold mb-1">Resultados: {chapterTitle}</h3>
+        <h3 className="text-2xl font-bold text-foreground mb-1">Resultados: {chapterTitle}</h3>
         <p className="text-muted text-sm">{getMessage()}</p>
       </div>
 
@@ -54,7 +54,7 @@ export function QuizResult({
       </div>
 
       {/* Score bar */}
-      <div className="w-full bg-slate-100 rounded-full h-4">
+      <div className="w-full bg-slate-100 dark:bg-white/10 rounded-full h-4">
         <div
           className={`h-4 rounded-full transition-all duration-1000 ${
             percentage >= 80

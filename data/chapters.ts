@@ -17,7 +17,7 @@ export const chapters: Chapter[] = [
     description:
       "Qué es Internet, conmutación de paquetes vs circuitos, retardos, pérdida, throughput y el modelo de capas de protocolos.",
     color: "from-blue-600 to-blue-800",
-    colorLight: "bg-blue-50 text-blue-800 border-blue-200",
+    colorLight: "bg-blue-50 text-blue-800 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800",
     icon: "Globe",
     sections: [
       { id: "que-es-internet", title: "¿Qué es Internet?" },
@@ -35,7 +35,7 @@ export const chapters: Chapter[] = [
     description:
       "Arquitecturas cliente-servidor y P2P, HTTP, DNS, SMTP, correo electrónico y programación de sockets.",
     color: "from-emerald-600 to-emerald-800",
-    colorLight: "bg-emerald-50 text-emerald-800 border-emerald-200",
+    colorLight: "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800",
     icon: "AppWindow",
     sections: [
       { id: "principios-aplicaciones", title: "Principios de Aplicaciones de Red" },
@@ -53,7 +53,7 @@ export const chapters: Chapter[] = [
     description:
       "UDP, TCP, transferencia confiable de datos, control de flujo, control de congestión y el three-way handshake.",
     color: "from-orange-600 to-orange-800",
-    colorLight: "bg-orange-50 text-orange-800 border-orange-200",
+    colorLight: "bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/30 dark:text-orange-300 dark:border-orange-800",
     icon: "ArrowLeftRight",
     sections: [
       { id: "servicios-transporte", title: "Servicios de la Capa de Transporte" },
