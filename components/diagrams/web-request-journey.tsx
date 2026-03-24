@@ -593,6 +593,92 @@ function getPacketBlocks(layerIdx: number, ls: LayerStates): { label: string; co
   return blocks;
 }
 
+// ─── SVG Topology (Packet Tracer style) ──────────────────────────────────────
+
+const SVG_DEVICES: Record<string, { x: number; y: number; type: "laptop" | "ap" | "switch" | "router" | "server" }> = {
+  laptop: { x: 55, y: 150, type: "laptop" },
+  ap:     { x: 145, y: 150, type: "ap" },
+  switch: { x: 240, y: 150, type: "switch" },
+  router: { x: 340, y: 150, type: "router" },
+  dns:    { x: 440, y: 55,  type: "server" },
+  google: { x: 470, y: 150, type: "server" },
+};
+
+const SVG_LINK_COORDS: Record<LinkId, [number, number, number, number]> = {
+  "laptop-ap":     [83, 150, 117, 150],
+  "ap-switch":     [173, 150, 212, 150],
+  "switch-router": [268, 150, 312, 150],
+  "router-dns":    [355, 133, 428, 72],
+  "router-google": [368, 150, 442, 150],
+};
+
+function DeviceIconSVG({ type, x, y, color, active, label, sub }: {
+  type: "laptop" | "ap" | "switch" | "router" | "server";
+  x: number; y: number; color: string; active: boolean; label: string; sub: string;
+}) {
+  const c = active ? color : "#545d68";
+  return (
+    <g className="transition-all duration-300">
+      {/* Platform card */}
+      <rect x={x - 26} y={y - 26} width={52} height={68} rx={7}
+        fill={active ? color + "0c" : "#2d333b60"}
+        stroke={active ? color + "50" : "#444c5640"}
+        strokeWidth={active ? 1.5 : 0.75} />
+
+      {/* Device icon */}
+      <g transform={`translate(${x}, ${y - 6})`}>
+        {type === "laptop" && (<>
+          <rect x={-11} y={-12} width={22} height={14} rx={2} fill={active ? color + "15" : "none"} stroke={c} strokeWidth={1.5} />
+          <rect x={-14} y={4} width={28} height={3} rx={1.5} fill="none" stroke={c} strokeWidth={1} />
+        </>)}
+        {type === "ap" && (<>
+          <rect x={-7} y={-2} width={14} height={12} rx={2} fill={active ? color + "15" : "none"} stroke={c} strokeWidth={1.5} />
+          <line x1={0} y1={-2} x2={0} y2={-10} stroke={c} strokeWidth={1.5} />
+          <circle cx={0} cy={-12} r={2} fill={c} />
+          {active && (<>
+            <path d="M-6,-8 A 8,8 0 0,1 6,-8" fill="none" stroke={c} strokeWidth={0.8} opacity={0.5} />
+            <path d="M-9,-6 A 12,12 0 0,1 9,-6" fill="none" stroke={c} strokeWidth={0.6} opacity={0.3} />
+          </>)}
+        </>)}
+        {type === "switch" && (<>
+          <rect x={-18} y={-7} width={36} height={14} rx={3} fill={active ? color + "15" : "none"} stroke={c} strokeWidth={1.5} />
+          {[-10, -3, 4, 11].map(px => <circle key={px} cx={px} cy={0} r={2} fill={c} />)}
+        </>)}
+        {type === "router" && (<>
+          <circle r={14} fill={active ? color + "15" : "none"} stroke={c} strokeWidth={1.5} />
+          <polygon points="-8,0 -5,-2.5 -5,2.5" fill={c} />
+          <polygon points="8,0 5,-2.5 5,2.5" fill={c} />
+          <polygon points="0,-8 -2.5,-5 2.5,-5" fill={c} />
+          <polygon points="0,8 -2.5,5 2.5,5" fill={c} />
+          <line x1={-6} y1={0} x2={6} y2={0} stroke={c} strokeWidth={1.5} />
+          <line x1={0} y1={-6} x2={0} y2={6} stroke={c} strokeWidth={1.5} />
+        </>)}
+        {type === "server" && (<>
+          <rect x={-9} y={-14} width={18} height={28} rx={2} fill={active ? color + "15" : "none"} stroke={c} strokeWidth={1.5} />
+          <line x1={-6} y1={-6} x2={6} y2={-6} stroke={c} strokeWidth={0.8} />
+          <line x1={-6} y1={2} x2={6} y2={2} stroke={c} strokeWidth={0.8} />
+          <circle cx={5} cy={-10} r={1.5} fill={c} />
+          <circle cx={5} cy={-2} r={1.5} fill={c} />
+          <circle cx={5} cy={6} r={1.5} fill={c} />
+        </>)}
+      </g>
+
+      {/* Online pulse */}
+      {active && (
+        <circle cx={x + 20} cy={y - 22} r={3} fill={color}>
+          <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" />
+        </circle>
+      )}
+
+      {/* Labels */}
+      <text x={x} y={y + 28} textAnchor="middle" fontSize={10} fontWeight="bold"
+        fill={active ? color : "#545d68"}>{label}</text>
+      <text x={x} y={y + 39} textAnchor="middle" fontSize={8}
+        fill={active ? "#adbac7" : "#545d68"}>{sub}</text>
+    </g>
+  );
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function WebRequestJourney() {
@@ -649,129 +735,116 @@ export function WebRequestJourney() {
         })}
       </div>
 
-      {/* ── Step title ──────────────────────────────────────────────────── */}
-      <div className="text-center space-y-1">
-        <span className="text-xs font-semibold text-muted uppercase tracking-wider">
-          Paso {stepIdx + 1} de {STEPS.length}
-        </span>
-        <h3 className="text-lg sm:text-xl font-bold text-foreground">{step.title}</h3>
-      </div>
-
-      {/* ── Actor cards grid ────────────────────────────────────────────── */}
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5 sm:gap-3">
-        {ACTOR_ORDER.map((id) => {
-          const actor = ACTOR_META[id];
-          const isActive = step.activeActors.includes(id);
-          const IconComp = actor.Icon;
-          return (
-            <div
-              key={id}
-              className="relative flex flex-col items-center gap-1 rounded-xl border-2 p-3 sm:p-4 transition-all duration-500"
-              style={
-                isActive
-                  ? {
-                      borderColor: actor.color,
-                      backgroundColor: actor.color + "0d",
-                      boxShadow: `0 0 20px ${actor.color}30, inset 0 0 20px ${actor.color}08`,
-                    }
-                  : {
-                      borderColor: "#444c5640",
-                      backgroundColor: "transparent",
-                      opacity: 0.35,
-                    }
-              }
-            >
-              {/* Online pulse dot */}
-              {isActive && (
-                <span
-                  className="absolute -top-1 -right-1 flex h-3 w-3"
-                >
-                  <span
-                    className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                    style={{ backgroundColor: actor.color }}
-                  />
-                  <span
-                    className="relative inline-flex rounded-full h-3 w-3"
-                    style={{ backgroundColor: actor.color }}
-                  />
-                </span>
-              )}
-
-              <IconComp
-                className="h-6 w-6 sm:h-7 sm:w-7 transition-colors duration-300"
-                style={{ color: isActive ? actor.color : "#545d68" }}
-                strokeWidth={isActive ? 2.2 : 1.5}
-              />
-              <span
-                className="text-[11px] sm:text-xs font-bold text-center leading-tight transition-colors duration-300"
-                style={{ color: isActive ? actor.color : "#545d68" }}
-              >
-                {actor.label}
-              </span>
-              <span
-                className="text-[9px] sm:text-[10px] text-center leading-tight transition-colors duration-300"
-                style={{ color: isActive ? "#adbac7" : "#545d68" }}
-              >
-                {actor.sub}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* ── Flow path (data direction) ──────────────────────────────────── */}
-      <div className="flex flex-wrap items-center justify-center gap-1 py-1">
-        <Zap className="h-3.5 w-3.5 text-muted mr-1" />
-        {flowPath.map((item, i) => {
-          if (item.actor === "__arrow__" && item.arrow) {
-            const ArrowIcon =
-              item.arrow.direction === "right"
-                ? ArrowRight
-                : item.arrow.direction === "left"
-                ? ArrowLeft
-                : ArrowLeftRight;
-            return (
-              <ArrowIcon
-                key={`arrow-${i}`}
-                className="h-3.5 w-3.5 flex-shrink-0"
-                style={{ color: item.arrow.color }}
-                strokeWidth={2.5}
-              />
-            );
-          }
-          if (item.actor !== "__arrow__") {
-            const actor = ACTOR_META[item.actor];
-            return (
-              <span
-                key={`actor-${i}`}
-                className="text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded-md whitespace-nowrap"
-                style={{
-                  color: actor.color,
-                  backgroundColor: actor.color + "15",
-                }}
-              >
-                {actor.label}
-              </span>
-            );
-          }
-          return null;
-        })}
-      </div>
-
-      {/* ── Legend ───────────────────────────────────────────────────────── */}
-      <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
-        {LINK_LEGEND.map((l) => (
-          <div key={l.label} className="flex items-center gap-1.5">
-            <span
-              className="inline-block w-4 h-0.5 rounded-full"
-              style={{
-                backgroundColor: l.color,
-                ...(l.dash ? { backgroundImage: `repeating-linear-gradient(90deg, ${l.color} 0px, ${l.color} 3px, transparent 3px, transparent 6px)`, backgroundColor: "transparent" } : {}),
-              }}
-            />
-            <span className="text-[10px] text-muted">{l.label}</span>
+      {/* ── Packet Tracer Topology ─────────────────────────────────────── */}
+      <div className="rounded-lg border border-border bg-[#1c2128] overflow-hidden">
+        {/* PT header bar */}
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-[#2d333b] border-b border-border">
+          <div className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] sm:text-xs font-bold text-foreground tracking-wide">Simulation Mode</span>
           </div>
-        ))}
+          <span className="text-[9px] sm:text-[10px] text-muted ml-auto">
+            Paso {stepIdx + 1}/{STEPS.length} — <span className="text-foreground font-semibold">{step.title}</span>
+          </span>
+        </div>
+
+        {/* SVG Topology */}
+        <svg viewBox="0 0 530 220" className="w-full bg-[#1c2128]" aria-label="Topología de red - Packet Tracer">
+          {/* Internet cloud */}
+          <rect x={380} y={18} width={140} height={180} rx={10}
+            fill="#22272e" stroke="#444c56" strokeWidth={1} strokeDasharray="6 3" />
+          <text x={450} y={14} textAnchor="middle" fontSize={9} fill="#768390" fontStyle="italic">Internet</text>
+
+          {/* Hidden paths for PDU animation */}
+          {(Object.keys(SVG_LINK_COORDS) as LinkId[]).map((id) => {
+            const [x1, y1, x2, y2] = SVG_LINK_COORDS[id];
+            const state = step.links[id];
+            if (!state || state === "idle") return null;
+            const fwd = `M${x1},${y1} L${x2},${y2}`;
+            const rev = `M${x2},${y2} L${x1},${y1}`;
+            return (
+              <g key={`paths-${id}`}>
+                <path id={`pdu-fwd-${id}`} d={fwd} fill="none" />
+                <path id={`pdu-rev-${id}`} d={rev} fill="none" />
+              </g>
+            );
+          })}
+
+          {/* Connection cables */}
+          {(Object.keys(SVG_LINK_COORDS) as LinkId[]).map((id) => {
+            const [x1, y1, x2, y2] = SVG_LINK_COORDS[id];
+            const state = step.links[id];
+            const isActive = state && state !== "idle";
+            const color = state === "outgoing" ? "#818cf8" : state === "incoming" ? "#22c55e"
+              : state === "flood" ? "#f59e0b" : state === "bidirectional" ? "#a78bfa" : "#333b44";
+            return (
+              <line key={id} x1={x1} y1={y1} x2={x2} y2={y2}
+                stroke={color} strokeWidth={isActive ? 2.5 : 1}
+                strokeDasharray={state === "flood" ? "6 3" : state === "bidirectional" ? "4 2" : undefined}
+                opacity={isActive ? 1 : 0.4} />
+            );
+          })}
+
+          {/* PDU envelopes travelling on active links */}
+          {(Object.keys(SVG_LINK_COORDS) as LinkId[]).map((id) => {
+            const state = step.links[id];
+            if (!state || state === "idle") return null;
+            const color = state === "outgoing" ? "#818cf8" : state === "incoming" ? "#22c55e"
+              : state === "flood" ? "#f59e0b" : "#a78bfa";
+            const pathRef = state === "incoming" ? `#pdu-rev-${id}` : `#pdu-fwd-${id}`;
+            const dur = state === "flood" ? "1s" : "2s";
+
+            return (
+              <g key={`env-${id}`}>
+                {/* Main PDU */}
+                <g>
+                  <rect x={-8} y={-5.5} width={16} height={11} rx={3} fill={color} stroke="#fff" strokeWidth={0.6} />
+                  <text x={0} y={1.5} textAnchor="middle" fontSize={5.5} fill="white" fontWeight="bold">PDU</text>
+                  <animateMotion dur={dur} repeatCount="indefinite" calcMode="linear">
+                    <mpath href={pathRef} />
+                  </animateMotion>
+                </g>
+                {/* Second PDU for bidirectional */}
+                {state === "bidirectional" && (
+                  <g>
+                    <rect x={-8} y={-5.5} width={16} height={11} rx={3} fill={color} stroke="#fff" strokeWidth={0.6} />
+                    <text x={0} y={1.5} textAnchor="middle" fontSize={5.5} fill="white" fontWeight="bold">PDU</text>
+                    <animateMotion dur={dur} repeatCount="indefinite" calcMode="linear" begin="1s">
+                      <mpath href={`#pdu-rev-${id}`} />
+                    </animateMotion>
+                  </g>
+                )}
+              </g>
+            );
+          })}
+
+          {/* Device icons */}
+          {ACTOR_ORDER.map((id) => {
+            const actor = ACTOR_META[id];
+            const pos = SVG_DEVICES[id];
+            const active = step.activeActors.includes(id);
+            return (
+              <DeviceIconSVG key={id} type={pos.type} x={pos.x} y={pos.y}
+                color={actor.color} active={active} label={actor.label} sub={actor.sub} />
+            );
+          })}
+
+          {/* Legend */}
+          <g transform="translate(8, 205)">
+            {[
+              { label: "Envío", color: "#818cf8" },
+              { label: "Respuesta", color: "#22c55e" },
+              { label: "Broadcast", color: "#f59e0b" },
+              { label: "Bidireccional", color: "#a78bfa" },
+            ].map((l, i) => (
+              <g key={l.label} transform={`translate(${i * 105}, 0)`}>
+                <rect x={0} y={-5} width={14} height={10} rx={2.5} fill={l.color} stroke="#fff" strokeWidth={0.3} />
+                <text x={3} y={2.5} fontSize={4.5} fill="white" fontWeight="bold">PDU</text>
+                <text x={18} y={3} fontSize={8} fill="#768390">{l.label}</text>
+              </g>
+            ))}
+          </g>
+        </svg>
       </div>
 
       {/* ── Packet Tracer – Encapsulation Stack ─────────────────────── */}
