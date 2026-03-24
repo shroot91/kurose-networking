@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { chapters } from "@/data/chapters";
-import { Globe, AppWindow, ArrowLeftRight, BookOpen, Network } from "lucide-react";
+import { Globe, AppWindow, ArrowLeftRight, BookOpen, Network, Settings, Cable } from "lucide-react";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Globe,
   AppWindow,
   ArrowLeftRight,
   Network,
+  Settings,
+  Cable,
 };
 
 export default function Home() {

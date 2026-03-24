@@ -308,6 +308,107 @@ export default function Capitulo3() {
           ]}
         />
 
+        {/* ---- RTT Estimation ---- */}
+        <h3 className="text-lg font-semibold mt-8 mb-3">
+          Estimación del RTT y Timeout en TCP
+        </h3>
+
+        <p className="text-muted leading-relaxed">
+          TCP no puede usar un timeout fijo: si la red es rápida, un timeout
+          largo desperdicia tiempo; si es lenta, uno corto provoca
+          retransmisiones innecesarias. Por eso TCP{" "}
+          <strong>estima el RTT dinámicamente</strong> y ajusta el timeout de
+          forma continua.
+        </p>
+
+        <InfoCallout variant="tip" title="Analogía: el meteorólogo adaptativo">
+          <p>
+            TCP estima el RTT como un meteorólogo que calcula la temperatura
+            promedio para mañana: usa las mediciones históricas, pero da{" "}
+            <strong>más peso a las lecturas recientes</strong> que a las
+            antiguas. Si ayer hizo calor y hoy también, el pronóstico de mañana
+            sube. Así TCP reacciona a cambios reales de la red sin ignorar el
+            comportamiento pasado.
+          </p>
+        </InfoCallout>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ConceptCard
+            title="SampleRTT y EstimatedRTT"
+            icon={Timer}
+            color="bg-blue-50 text-blue-700 border-blue-200"
+          >
+            <p>
+              <strong>SampleRTT</strong>: tiempo medido entre el envío de un
+              segmento y la recepción de su ACK. Solo se mide para segmentos{" "}
+              <em>no retransmitidos</em> (para evitar ambigüedad sobre a cuál
+              envío corresponde el ACK — Algoritmo de Karn).
+            </p>
+            <p className="mt-2">
+              <strong>EstimatedRTT</strong>: promedio ponderado exponencial
+              (EWMA) con α = 0.125. Da más peso a muestras recientes sin
+              descartar el historial.
+            </p>
+          </ConceptCard>
+          <ConceptCard
+            title="DevRTT y TimeoutInterval"
+            icon={Activity}
+            color="bg-amber-50 text-amber-700 border-amber-200"
+          >
+            <p>
+              <strong>DevRTT</strong>: mide la <em>variabilidad</em> del RTT
+              con β = 0.25. Si la red es estable, DevRTT es pequeño; si el RTT
+              fluctúa mucho, DevRTT crece.
+            </p>
+            <p className="mt-2">
+              <strong>TimeoutInterval</strong>: EstimatedRTT +{" "}
+              <strong>4 × DevRTT</strong>. El margen 4×DevRTT es el
+              &quot;colchón de seguridad&quot;: cuando la red varía mucho, el
+              timeout se amplía para no retransmitir prematuramente.
+            </p>
+          </ConceptCard>
+        </div>
+
+        <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 dark:bg-white/[0.07] rounded p-3">
+          <p className="font-bold text-blue-700 dark:text-blue-400">EstimatedRTT (EWMA):</p>
+          <p>EstimatedRTT = (1 - α) × EstimatedRTT + α × SampleRTT</p>
+          <p className="text-muted">donde α = 0.125 (recomendado por RFC 6298)</p>
+          <p className="font-bold text-amber-700 dark:text-amber-400 pt-2 border-t border-slate-300 dark:border-slate-600">
+            DevRTT (variación):
+          </p>
+          <p>DevRTT = (1 - β) × DevRTT + β × |SampleRTT - EstimatedRTT|</p>
+          <p className="text-muted">donde β = 0.25</p>
+          <p className="font-bold text-emerald-700 dark:text-emerald-400 pt-2 border-t border-slate-300 dark:border-slate-600">
+            Intervalo de Timeout:
+          </p>
+          <p>TimeoutInterval = EstimatedRTT + 4 × DevRTT</p>
+        </div>
+
+        <ExampleBlock title="Cálculo numérico de EstimatedRTT y Timeout">
+          <p>
+            Un segmento llega con <strong>SampleRTT₁ = 106 ms</strong>.
+            Estado previo: EstimatedRTT = 100 ms, DevRTT = 5 ms.
+          </p>
+          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 dark:bg-white/[0.07] rounded p-3">
+            <p className="font-bold">Nuevo EstimatedRTT:</p>
+            <p>= (1 - 0.125) × 100 + 0.125 × 106</p>
+            <p>= 0.875 × 100 + 0.125 × 106</p>
+            <p>= 87.5 + 13.25 = <strong>100.75 ms</strong></p>
+            <p className="font-bold pt-2 border-t border-amber-300">Nuevo DevRTT:</p>
+            <p>= (1 - 0.25) × 5 + 0.25 × |106 - 100|</p>
+            <p>= 0.75 × 5 + 0.25 × 6</p>
+            <p>= 3.75 + 1.5 = <strong>5.25 ms</strong></p>
+            <p className="font-bold pt-2 border-t border-amber-300">TimeoutInterval:</p>
+            <p>= 100.75 + 4 × 5.25</p>
+            <p>= 100.75 + 21 = <strong>121.75 ms</strong></p>
+          </div>
+          <p className="mt-2 text-sm">
+            Interpretación: aunque el RTT medido subió solo 6 ms, el timeout
+            resultante (121.75 ms) incluye un margen de 21 ms por si la
+            variabilidad sigue aumentando.
+          </p>
+        </ExampleBlock>
+
         <ExampleBlock title="Números de secuencia TCP">
           <p>
             Un archivo de <strong>500,000 bytes</strong> se transmite con MSS ={" "}
@@ -331,6 +432,164 @@ export default function Capitulo3() {
             </p>
           </div>
         </ExampleBlock>
+
+        {/* ---- TCP Connection Teardown ---- */}
+        <h3 className="text-lg font-semibold mt-8 mb-3">
+          Cierre de Conexión TCP: 4-Way FIN Handshake
+        </h3>
+
+        <p className="text-muted leading-relaxed">
+          Así como TCP establece la conexión con un 3-way handshake, la{" "}
+          <strong>cierra formalmente con un proceso de 4 pasos</strong>. No se
+          puede cerrar de golpe: TCP es full-duplex, por lo que cada dirección
+          del canal debe cerrarse de forma independiente.
+        </p>
+
+        <InfoCallout variant="tip" title="Analogía: la despedida formal por teléfono">
+          <p>
+            Cerrar una conexión TCP es como terminar una llamada de forma
+            educada: cada parte debe decir &quot;chau, yo ya terminé&quot; y
+            esperar a que el otro también lo diga antes de colgar. Si uno cuelga
+            sin avisar, el otro podría seguir hablando al vacío.
+          </p>
+        </InfoCallout>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ConceptCard
+            title="Los 4 pasos del cierre"
+            icon={ArrowLeftRight}
+            color="bg-blue-50 text-blue-700 border-blue-200"
+          >
+            <ol className="space-y-1.5 list-decimal list-inside text-sm">
+              <li>
+                <strong>FIN</strong> (cliente → servidor): &quot;Yo terminé de
+                enviar datos&quot; (FIN=1). El cliente entra en
+                WAIT_1.
+              </li>
+              <li>
+                <strong>ACK</strong> (servidor → cliente): &quot;Entendido, ya
+                sé que terminaste.&quot; El servidor puede seguir enviando datos
+                (half-close).
+              </li>
+              <li>
+                <strong>FIN</strong> (servidor → cliente): &quot;Yo también
+                terminé.&quot; El servidor envía su propio FIN=1.
+              </li>
+              <li>
+                <strong>ACK</strong> (cliente → servidor): &quot;Entendido,
+                cerramos.&quot; El cliente entra en <strong>TIME_WAIT</strong>.
+              </li>
+            </ol>
+          </ConceptCard>
+          <ConceptCard
+            title="TIME_WAIT y RST"
+            icon={Timer}
+            color="bg-amber-50 text-amber-700 border-amber-200"
+          >
+            <p>
+              <strong>TIME_WAIT</strong>: después del último ACK, el cliente
+              espera <strong>2×MSL</strong> (~60-120 segundos) antes de liberar
+              el puerto definitivamente. Esto garantiza dos cosas:
+            </p>
+            <ul className="mt-1 list-disc list-inside text-sm space-y-1">
+              <li>
+                Que el último ACK llegó al servidor (si se perdió, el servidor
+                reenvía su FIN y el cliente responde).
+              </li>
+              <li>
+                Que todos los segmentos &quot;fantasma&quot; de la conexión
+                anterior hayan expirado en la red.
+              </li>
+            </ul>
+            <p className="mt-2">
+              <strong>RST</strong>: cierre abrupto sin handshake. Se usa ante
+              errores graves o para rechazar conexiones no deseadas. No hay
+              TIME_WAIT — la conexión se termina de inmediato.
+            </p>
+          </ConceptCard>
+        </div>
+
+        {/* 4-Way FIN diagram */}
+        <svg
+          viewBox="0 0 400 260"
+          className="w-full max-w-md mx-auto mt-4"
+          aria-label="Diagrama del 4-Way FIN Handshake TCP"
+        >
+          {/* Timeline lines */}
+          <line x1={80} y1={20} x2={80} y2={240} stroke="#64748b" strokeWidth={2} />
+          <line x1={320} y1={20} x2={320} y2={240} stroke="#64748b" strokeWidth={2} />
+
+          {/* Labels */}
+          <text x={80} y={15} textAnchor="middle" fill="#3b82f6" fontSize={13} fontWeight="bold">
+            Cliente
+          </text>
+          <text x={320} y={15} textAnchor="middle" fill="#10b981" fontSize={13} fontWeight="bold">
+            Servidor
+          </text>
+
+          {/* Step 1: FIN → */}
+          <line x1={80} y1={60} x2={310} y2={80} stroke="#ef4444" strokeWidth={2} markerEnd="url(#arrow-red)" />
+          <polygon points="308,77 320,82 310,88" fill="#ef4444" />
+          <text x={190} y={58} textAnchor="middle" fill="#ef4444" fontSize={11} fontWeight="bold">
+            FIN
+          </text>
+          <text x={190} y={70} textAnchor="middle" fill="#ef4444" fontSize={9}>
+            seq=x, FIN=1
+          </text>
+
+          {/* Step 2: ACK ← */}
+          <line x1={320} y1={100} x2={90} y2={120} stroke="#10b981" strokeWidth={2} />
+          <polygon points="92,117 80,122 90,128" fill="#10b981" />
+          <text x={190} y={98} textAnchor="middle" fill="#10b981" fontSize={11} fontWeight="bold">
+            ACK
+          </text>
+          <text x={190} y={110} textAnchor="middle" fill="#10b981" fontSize={9}>
+            ack=x+1
+          </text>
+
+          {/* Step 3: FIN ← */}
+          <line x1={320} y1={140} x2={90} y2={160} stroke="#ef4444" strokeWidth={2} />
+          <polygon points="92,157 80,162 90,168" fill="#ef4444" />
+          <text x={190} y={138} textAnchor="middle" fill="#ef4444" fontSize={11} fontWeight="bold">
+            FIN
+          </text>
+          <text x={190} y={150} textAnchor="middle" fill="#ef4444" fontSize={9}>
+            seq=y, FIN=1
+          </text>
+
+          {/* Step 4: ACK → */}
+          <line x1={80} y1={180} x2={310} y2={200} stroke="#10b981" strokeWidth={2} />
+          <polygon points="308,197 320,202 310,208" fill="#10b981" />
+          <text x={190} y={178} textAnchor="middle" fill="#10b981" fontSize={11} fontWeight="bold">
+            ACK (TIME_WAIT)
+          </text>
+          <text x={190} y={190} textAnchor="middle" fill="#10b981" fontSize={9}>
+            ack=y+1
+          </text>
+
+          {/* TIME_WAIT label */}
+          <text x={55} y={220} textAnchor="middle" fill="#f59e0b" fontSize={9} fontStyle="italic">
+            TIME_WAIT
+          </text>
+          <text x={55} y={231} textAnchor="middle" fill="#f59e0b" fontSize={9} fontStyle="italic">
+            2×MSL
+          </text>
+          <text x={325} y={220} textAnchor="middle" fill="#64748b" fontSize={9} fontStyle="italic">
+            CLOSED
+          </text>
+        </svg>
+
+        <InfoCallout variant="info" title="¿Por qué 4 pasos y no 2?">
+          <p>
+            TCP es <strong>full-duplex</strong>: dos flujos de datos
+            independientes corren en paralelo (cliente→servidor y
+            servidor→cliente). Cada flujo necesita su propio FIN y su propio
+            ACK. Por eso son 4 mensajes: 2 FINs (uno por dirección) + 2 ACKs
+            (uno por cada FIN). En ocasiones, el servidor puede combinar el ACK
+            del FIN del cliente con su propio FIN (piggybacking), reduciendo a
+            3 mensajes — pero conceptualmente siempre son 4 eventos.
+          </p>
+        </InfoCallout>
 
         <InfoCallout variant="info" title="Control de flujo vs Control de congestión">
           <p>

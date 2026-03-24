@@ -673,7 +673,293 @@ export default function Capitulo4() {
       </SectionBlock>
 
       {/* ============================================ */}
-      {/* SECCIÓN 7: Quiz */}
+      {/* SECCIÓN 7: ICMP */}
+      {/* ============================================ */}
+      <SectionBlock id="icmp" title="ICMP: Mensajes de Control de Internet">
+        <p className="text-muted leading-relaxed">
+          <strong>ICMP</strong> (Internet Control Message Protocol) es el
+          protocolo de "señalización" de la capa de red. Mientras IP transporta
+          datos, ICMP transporta <strong>mensajes de control y error</strong>{" "}
+          entre routers y hosts. ICMP está definido en el RFC 792 y se
+          encapsula directamente en datagramas IP (protocolo número 1).
+        </p>
+
+        <p className="text-muted leading-relaxed">
+          ICMP es como el sistema de señales luminosas en una autopista. IP es
+          el vehículo que transporta pasajeros (datos); ICMP son las señales de
+          "desvío obligatorio", "accidente más adelante" o "salida bloqueada"
+          que informan a los conductores qué está pasando en la red. Los
+          pasajeros (aplicaciones) no ven estas señales directamente, pero
+          afectan cómo llegan a destino.
+        </p>
+
+        <ConceptCard
+          title="Tipos de Mensajes ICMP Más Importantes"
+          icon={Layers}
+          color="bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950/30 dark:text-violet-300 dark:border-violet-800"
+        >
+          <ul className="space-y-2 list-disc list-inside">
+            <li>
+              <strong>Echo Request / Echo Reply (tipo 8/0):</strong> usado por{" "}
+              <code>ping</code>. El origen envía un Echo Request; el destino
+              responde con Echo Reply. Permite medir RTT y verificar
+              conectividad.
+            </li>
+            <li>
+              <strong>Destination Unreachable (tipo 3):</strong> el router no
+              puede entregar el paquete. Subtipo 0: red inalcanzable; Subtipo
+              1: host inalcanzable; Subtipo 3: puerto no disponible.
+            </li>
+            <li>
+              <strong>Time Exceeded (tipo 11):</strong> el TTL llegó a 0. El
+              router descarta el paquete y avisa al origen. Usado por{" "}
+              <code>traceroute</code>.
+            </li>
+            <li>
+              <strong>Redirect (tipo 5):</strong> un router informa al host que
+              hay una mejor ruta (gateway más cercano) para cierto destino.
+            </li>
+          </ul>
+        </ConceptCard>
+
+        <ExampleBlock title="Cómo funciona `ping`">
+          <p>
+            Al ejecutar <code>ping 8.8.8.8</code> desde tu PC hacia Google DNS,
+            se produce el siguiente intercambio:
+          </p>
+          <ol className="list-decimal list-inside space-y-2 mt-2">
+            <li>
+              Tu PC envía{" "}
+              <strong>ICMP Echo Request (tipo 8, código 0)</strong> con TTL=64,
+              identificador y número de secuencia.
+            </li>
+            <li>
+              El servidor 8.8.8.8 recibe el paquete y responde con{" "}
+              <strong>ICMP Echo Reply (tipo 0, código 0)</strong>.
+            </li>
+            <li>
+              Tu PC calcula: <strong>RTT = tiempo_llegada − tiempo_envío</strong>.
+            </li>
+            <li>
+              TTL=117 en la respuesta indica que el servidor partió con TTL=128
+              y el paquete atravesó 11 routers antes de llegar.
+            </li>
+          </ol>
+          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 dark:bg-white/[0.07] rounded p-3">
+            <p className="text-slate-500 dark:text-slate-400"># Salida típica de ping</p>
+            <p>PING 8.8.8.8 (8.8.8.8): 56 bytes de datos</p>
+            <p>64 bytes from 8.8.8.8: icmp_seq=1 ttl=117 time=12.3 ms</p>
+            <p>64 bytes from 8.8.8.8: icmp_seq=2 ttl=117 time=11.8 ms</p>
+            <p>64 bytes from 8.8.8.8: icmp_seq=3 ttl=117 time=12.1 ms</p>
+            <p className="pt-2 border-t border-amber-300">
+              --- 8.8.8.8 ping statistics ---
+            </p>
+            <p>3 packets transmitted, 3 received, 0% packet loss</p>
+            <p>round-trip min/avg/max = 11.8/12.1/12.3 ms</p>
+          </div>
+        </ExampleBlock>
+
+        <ExampleBlock title="Cómo funciona `traceroute`">
+          <p>
+            <code>traceroute</code> (o <code>tracert</code> en Windows) usa el
+            campo TTL de IP y los mensajes ICMP Time Exceeded para descubrir
+            los routers en la ruta:
+          </p>
+          <ol className="list-decimal list-inside space-y-2 mt-2">
+            <li>
+              Envía 3 datagramas UDP con <strong>TTL=1</strong> → el primer
+              router los descarta y responde con{" "}
+              <strong>ICMP Time Exceeded</strong>.{" "}
+              <code>traceroute</code> registra la IP del router y el RTT.
+            </li>
+            <li>
+              Envía con <strong>TTL=2</strong> → llega al segundo router →
+              Time Exceeded.
+            </li>
+            <li>Continúa incrementando TTL hasta llegar al destino.</li>
+            <li>
+              En el destino, como el puerto UDP destino es inaccesible (número
+              de puerto alto aleatorio), el host responde con{" "}
+              <strong>ICMP Destination Unreachable (tipo 3, código 3)</strong>{" "}
+              → <code>traceroute</code> sabe que llegó.
+            </li>
+          </ol>
+          <p className="mt-2 text-sm italic">
+            Analogía: es como ir en colectivo preguntando "¿hasta dónde me
+            lleva usted?" a cada chofer: el primero dice "hasta la esquina", el
+            segundo "hasta la avenida", etc., hasta llegar al destino.
+          </p>
+          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 dark:bg-white/[0.07] rounded p-3">
+            <p className="text-slate-500 dark:text-slate-400"># traceroute to 8.8.8.8</p>
+            <p> 1  192.168.1.1   (router local)        1.2 ms</p>
+            <p> 2  100.64.0.1    (ISP CPE)              8.3 ms</p>
+            <p> 3  10.20.30.1    (ISP backbone)        11.1 ms</p>
+            <p> 4  72.14.232.1   (Google backbone)     13.4 ms</p>
+            <p> 5  8.8.8.8       (destino)             12.3 ms</p>
+          </div>
+        </ExampleBlock>
+
+        <InfoCallout variant="warning" title="ICMP e ICMPv6">
+          <p>
+            IPv6 usa <strong>ICMPv6</strong> (RFC 4443) que cumple las mismas
+            funciones que ICMP para IPv4, pero además incorpora funcionalidades
+            adicionales: <strong>Neighbor Discovery Protocol (NDP)</strong>{" "}
+            reemplaza a ARP (resolución de direcciones),{" "}
+            <strong>SLAAC</strong> (autoconfiguración sin servidor), y{" "}
+            <strong>Path MTU Discovery</strong>. ICMPv6 es más crítico que ICMP
+            en IPv4 — bloquear ICMPv6 en firewalls puede romper completamente
+            la conectividad IPv6.
+          </p>
+        </InfoCallout>
+
+        <ComparisonTable
+          headers={["Herramienta", "Mensajes ICMP usados", "Propósito", "Comando"]}
+          rows={[
+            ["ping", "Echo Request (8) + Echo Reply (0)", "Verificar conectividad y medir RTT", "ping <ip>"],
+            ["traceroute", "Time Exceeded (11) + Dest. Unreachable (3)", "Descubrir ruta y latencia por salto", "traceroute <ip>"],
+            ["MTU discovery", "Fragmentation Needed (3/4) con DF=1", "Determinar MTU del camino", "Automático en TCP"],
+            ["Router error", "Destination Unreachable (3)", "Notificar host de destino inalcanzable", "Automático"],
+          ]}
+        />
+      </SectionBlock>
+
+      {/* ============================================ */}
+      {/* SECCIÓN 8: SDN */}
+      {/* ============================================ */}
+      <SectionBlock id="sdn" title="SDN: Redes Definidas por Software">
+        <p className="text-muted leading-relaxed">
+          Históricamente, los routers integran el plano de datos y el plano de
+          control en el mismo dispositivo — cada router ejecuta su propio
+          algoritmo de enrutamiento (OSPF, BGP) y construye su propia tabla de
+          reenvío. <strong>SDN (Software-Defined Networking)</strong> separa
+          radicalmente estos dos planos: el plano de datos queda en dispositivos
+          simples (switches/routers), mientras el plano de control se centraliza
+          en un <strong>controlador SDN</strong> externo con visión global de la
+          red.
+        </p>
+
+        <p className="text-muted leading-relaxed">
+          La arquitectura tradicional es como si cada semáforo de una ciudad
+          tomara sus propias decisiones de forma independiente. SDN es como
+          tener un centro de control de tráfico centralizado que programa todos
+          los semáforos simultáneamente con información completa de la ciudad —
+          puede redirigir el tráfico óptimamente en tiempo real.
+        </p>
+
+        <ConceptCard
+          title="Arquitectura SDN: Los 3 Planos"
+          icon={Network}
+          color="bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950/30 dark:text-violet-300 dark:border-violet-800"
+        >
+          <ul className="space-y-2 list-disc list-inside">
+            <li>
+              <strong>Plano de Datos (Data Plane):</strong> switches SDN
+              simples y rápidos. Solo ejecutan la lógica de reenvío que el
+              controlador les programó. No ejecutan algoritmos de enrutamiento
+              complejos.
+            </li>
+            <li>
+              <strong>Plano de Control (Control Plane):</strong> el{" "}
+              <strong>controlador SDN</strong> (software centralizado) — tiene
+              vista completa de la topología, instala las reglas de reenvío en
+              cada switch. Ejemplos: OpenDaylight, ONOS, Ryu.
+            </li>
+            <li>
+              <strong>Plano de Aplicación:</strong> aplicaciones que usan las
+              APIs del controlador para implementar lógicas de red (balanceo de
+              carga, firewall, QoS, ingeniería de tráfico).
+            </li>
+          </ul>
+        </ConceptCard>
+
+        <ConceptCard
+          title="OpenFlow: El Protocolo SDN"
+          icon={Cpu}
+          color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
+        >
+          <p>
+            OpenFlow es el protocolo estándar entre el controlador y los
+            switches SDN. Los switches OpenFlow tienen una{" "}
+            <strong>tabla de flujos</strong> (flow table) con entradas de la
+            forma <strong>Match → Action</strong> (coincidencia → acción):
+          </p>
+          <ul className="space-y-2 list-disc list-inside mt-2">
+            <li>
+              <strong>Match:</strong> puede coincidir en hasta 12 campos de
+              cabecera: IP origen/destino, puerto TCP/UDP, dirección MAC, VLAN
+              ID, protocolo, etc.
+            </li>
+            <li>
+              <strong>Action — Forward:</strong> enviar el paquete por el
+              puerto X del switch.
+            </li>
+            <li>
+              <strong>Action — Drop:</strong> descartar el paquete
+              silenciosamente.
+            </li>
+            <li>
+              <strong>Action — Modify:</strong> modificar campos de cabecera
+              (IP, puerto, VLAN) antes de reenviar.
+            </li>
+            <li>
+              <strong>Action — Send to controller:</strong> enviar al
+              controlador para que decida qué hacer.
+            </li>
+          </ul>
+          <p className="mt-2 text-sm italic">
+            Analogía: la tabla de flujos es como un libro de instrucciones: "Si
+            el paquete viene de 10.0.0.1 y va al puerto 80 → envialo por el
+            puerto 3 del switch".
+          </p>
+        </ConceptCard>
+
+        <ExampleBlock title="Match+Action: un firewall SDN en 3 reglas">
+          <p>
+            Un controlador SDN puede implementar un firewall completo
+            programando estas reglas en los switches. El mismo hardware físico
+            se comporta como router, switch, firewall o balanceador de carga
+            según las reglas instaladas — sin comprar equipos especializados
+            para cada función:
+          </p>
+          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 dark:bg-white/[0.07] rounded p-3">
+            <p className="text-slate-500 dark:text-slate-400"># Tabla de flujos OpenFlow (Match → Action)</p>
+            <p className="pt-1">
+              ip_src=192.168.1.0/24, tcp_dst=80  →  forward port 2 (Internet)
+            </p>
+            <p>ip_src=ANY, tcp_dst=23 (Telnet)  →  drop</p>
+            <p>ip_dst=10.0.0.0/8               →  drop (bloquear tráfico interno)</p>
+          </div>
+        </ExampleBlock>
+
+        <InfoCallout variant="info" title="SDN en la práctica: Google B4 y data centers">
+          <p>
+            <strong>Google B4</strong> es la red WAN interna de Google que
+            interconecta sus data centers globales. Es una de las primeras
+            grandes implementaciones SDN en producción. Google reporta
+            utilización de <strong>100% de sus enlaces</strong> (vs ~40–50% en
+            redes tradicionales con enrutamiento estándar), porque el
+            controlador SDN puede hacer ingeniería de tráfico global en tiempo
+            real, distribuyendo flujos óptimamente en todos los enlaces. Los
+            data centers modernos de AWS, Azure y Google Cloud usan SDN
+            extensivamente para sus redes virtuales (VPC, subnets virtuales).
+          </p>
+        </InfoCallout>
+
+        <ComparisonTable
+          headers={["Característica", "Red Tradicional", "Red SDN"]}
+          rows={[
+            ["Control", "Distribuido (cada router decide)", "Centralizado (controlador SDN)"],
+            ["Plano de datos", "Integrado con plano de control", "Separado (switches simples)"],
+            ["Programabilidad", "Limitada (config CLI/SNMP)", "Alta (APIs northbound/southbound)"],
+            ["Visibilidad", "Local a cada dispositivo", "Global (el controlador ve toda la red)"],
+            ["Innovación", "Lenta (ciclos de hardware)", "Rápida (actualizar software del controlador)"],
+            ["Protocolo estándar", "Propietario por vendor", "OpenFlow, NETCONF/YANG"],
+          ]}
+        />
+      </SectionBlock>
+
+      {/* ============================================ */}
+      {/* SECCIÓN 9: Quiz */}
       {/* ============================================ */}
       <SectionBlock id="quiz" title="Quiz del Capítulo 4">
         <p className="text-muted leading-relaxed mb-4">

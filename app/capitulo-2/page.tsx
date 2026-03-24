@@ -71,6 +71,16 @@ export default function Capitulo2() {
           </ConceptCard>
         </div>
 
+        <InfoCallout variant="info" title="BitTorrent: P2P en la práctica">
+          <ul className="space-y-1.5 list-disc list-inside">
+            <li>El archivo se divide en <strong>chunks</strong> (típicamente 256 KB)</li>
+            <li>Un <strong>tracker</strong> lleva registro de los peers que tienen partes del archivo (en versiones modernas, reemplazado por DHT — Distributed Hash Table)</li>
+            <li><strong>Tit-for-Tat</strong>: cada peer prioriza enviar datos a los peers que más le envían a él. Los 3-4 peers que más le dan son sus &quot;unchoked peers&quot;. Cada 30 segundos, &quot;optimistically unchokes&quot; un peer aleatorio para descubrir mejores vecinos.</li>
+            <li><strong>Rarest First</strong>: el cliente siempre pide primero los chunks que menos peers tienen. Esto aumenta la disponibilidad global del archivo.</li>
+            <li><em>Analogía:</em> Es como un trueque — compartís lo que tenés con quienes te comparten, y todos intentan conseguir primero las piezas más escasas para que el puzzle completo esté más distribuido.</li>
+          </ul>
+        </InfoCallout>
+
         <InfoCallout variant="info" title="Sockets: La interfaz de la aplicación con la red">
           <p>
             Un <strong>socket</strong> es la interfaz entre la capa de aplicación
@@ -331,7 +341,283 @@ export default function Capitulo2() {
       </SectionBlock>
 
       {/* ============================================ */}
-      {/* SECCIÓN 5: Programación de Sockets */}
+      {/* SECCIÓN 5: Caché Web y Servidores Proxy */}
+      {/* ============================================ */}
+      <SectionBlock id="cache-web" title="Caché Web y Servidores Proxy">
+        <p className="text-muted leading-relaxed">
+          Un <strong>servidor proxy</strong> (también llamado caché web) es un
+          servidor de red que actúa en nombre de los servidores de origen.
+          Cuando un navegador solicita un objeto, primero va al proxy; si el
+          proxy tiene una copia reciente en caché, la devuelve directamente
+          (<strong>cache hit</strong>). Si no (<strong>cache miss</strong>), el
+          proxy solicita el objeto al servidor de origen, lo almacena en caché
+          y lo entrega al cliente.
+        </p>
+
+        <InfoCallout variant="info" title="Analogía: la fotocopiadora de la facultad">
+          <p>
+            El proxy es como la fotocopiadora de una facultad. En lugar de que
+            cada alumno vaya a la biblioteca (servidor de origen) a sacar una
+            copia del mismo libro, alguien ya lo copió y está disponible en el
+            pasillo. Si el libro cambió (expiró el TTL), hay que ir a la
+            biblioteca de nuevo.
+          </p>
+        </InfoCallout>
+
+        <ConceptCard
+          title="Beneficios del Proxy Cache"
+          icon={Server}
+          color="bg-blue-50 text-blue-700 border-blue-200"
+        >
+          <ul className="space-y-1.5 list-disc list-inside">
+            <li>Reduce tiempo de respuesta (el caché está más cerca del cliente)</li>
+            <li>Reduce tráfico en el enlace de acceso a Internet (menos costo)</li>
+            <li>El ISP instala proxies para reducir su tráfico de peering/transit</li>
+            <li>Beneficia a múltiples usuarios (un hit sirve a todos)</li>
+          </ul>
+        </ConceptCard>
+
+        <ExampleBlock title="Cálculo del impacto de un proxy cache">
+          <p>
+            Institución con enlace de acceso de <strong>15 Mbps</strong> hacia
+            Internet, 100 solicitudes/segundo, tamaño promedio de objeto 1 Mbit.
+          </p>
+          <div className="font-mono text-xs space-y-1 mt-2 bg-white/60 dark:bg-white/[0.07] rounded p-3">
+            <p className="font-bold">Sin caché:</p>
+            <p>Tasa de datos = 100 solicitudes/s × 1 Mbit = 100 Mbps &gt;&gt; 15 Mbps del enlace</p>
+            <p>→ Enlace saturado, retardos de cola enormes</p>
+            <p className="pt-2 border-t border-amber-300 font-bold">Con proxy cache (hit rate = 0.4):</p>
+            <p>Solicitudes que salen al enlace = 60% × 100 Mbps = 60 Mbps → aún alto</p>
+            <p className="pt-2 border-t border-amber-300 font-bold">Con proxy cache (hit rate = 0.6):</p>
+            <p>Solicitudes que salen al enlace = 40% × 100 Mbps = 40 Mbps</p>
+            <p>→ <strong>Enlace de 15 Mbps sigue congestionado</strong>, pero ampliar a 100 Mbps es caro</p>
+            <p>→ <strong>Con proxy y hit rate 0.6:</strong> 40 Mbps promedio, funciona sin ampliar el enlace</p>
+          </div>
+        </ExampleBlock>
+
+        <InfoCallout variant="info" title="GET Condicional">
+          <p>
+            El proxy no sirve objetos desactualizados. Usa el{" "}
+            <strong>GET Condicional</strong>: incluye la cabecera{" "}
+            <code className="bg-card dark:bg-white/10 px-1 rounded">
+              If-Modified-Since: &lt;fecha&gt;
+            </code>{" "}
+            en la solicitud al servidor de origen. Si el objeto{" "}
+            <strong>NO cambió</strong>, el servidor responde{" "}
+            <strong>304 Not Modified</strong> (sin body, ahorrando ancho de
+            banda). Si cambió, responde <strong>200 OK</strong> con el objeto
+            actualizado. El proxy actualiza su caché y sirve la versión fresca.
+          </p>
+        </InfoCallout>
+
+        <ComparisonTable
+          headers={["Escenario", "Sin Proxy", "Con Proxy (hit rate 0.6)"]}
+          rows={[
+            ["Objetos servidos localmente", "0%", "60%"],
+            ["Tráfico al servidor de origen", "100%", "40%"],
+            ["Latencia promedio", "RTT_internet + d_trans", "~0 ms para hits, RTT_internet para misses"],
+            ["Costo de ancho de banda", "Alto", "Reducido en ~60%"],
+          ]}
+        />
+      </SectionBlock>
+
+      {/* ============================================ */}
+      {/* SECCIÓN 6: Video Streaming y DASH */}
+      {/* ============================================ */}
+      <SectionBlock id="video-streaming" title="Streaming de Video y DASH">
+        <p className="text-muted leading-relaxed">
+          El video es el tipo de tráfico dominante en Internet — Netflix,
+          YouTube y plataformas similares representan más del{" "}
+          <strong>80% del tráfico descargado</strong>. Un video es una
+          secuencia de imágenes (frames) a 24-60 fps. Un video de 4K puede
+          requerir 15-25 Mbps constantes; una conexión inestable resulta en
+          buffering o calidad degradada.
+        </p>
+
+        <InfoCallout variant="info" title="Analogía: el grifo de presión variable">
+          <p>
+            Sin streaming adaptativo, ver un video en Internet sería como
+            intentar llenar un vaso de agua con un grifo que varía su presión
+            constantemente — a veces desborda, a veces queda vacío. DASH es
+            como un sistema inteligente que ajusta el flujo automáticamente.
+          </p>
+        </InfoCallout>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ConceptCard
+            title="El Problema del Streaming"
+            icon={Globe}
+            color="bg-amber-50 text-amber-700 border-amber-200"
+          >
+            <ul className="space-y-1.5 list-disc list-inside">
+              <li>El ancho de banda de un usuario varía constantemente (congestión, WiFi, movilidad)</li>
+              <li>Si el video se codifica a un bitrate fijo y el ancho de banda cae → <strong>buffering</strong> (el vaso se vacía)</li>
+              <li>Si el bitrate es muy bajo para evitar buffering → <strong>calidad degradada</strong> permanentemente</li>
+              <li>Solución: <strong>adaptar dinámicamente la calidad</strong> según el ancho de banda disponible</li>
+            </ul>
+          </ConceptCard>
+
+          <ConceptCard
+            title="DASH: Dynamic Adaptive Streaming over HTTP"
+            icon={Network}
+            color="bg-emerald-50 text-emerald-700 border-emerald-200"
+          >
+            <ul className="space-y-1.5 list-disc list-inside">
+              <li>El video se codifica en <strong>múltiples versiones</strong> (300 kbps, 1 Mbps, 4 Mbps, 8 Mbps, 25 Mbps)</li>
+              <li>Cada versión se divide en <strong>chunks</strong> de 2-10 segundos</li>
+              <li>Un archivo <strong>manifest</strong> (MPD) lista todas las versiones y URLs de sus chunks</li>
+              <li>El cliente <strong>mide el ancho de banda disponible</strong> continuamente</li>
+              <li>En cada chunk, elige la <strong>mejor calidad</strong> que puede descargar sin buffering</li>
+              <li>Todo usa <strong>HTTP/TCP estándar</strong> — funciona sobre cualquier infraestructura web</li>
+            </ul>
+          </ConceptCard>
+        </div>
+
+        <InfoCallout variant="tip" title="Buffer del cliente como amortiguador">
+          <p>
+            El reproductor mantiene un <strong>buffer de reproducción</strong>{" "}
+            (típicamente 10-30 segundos de video). El algoritmo DASH intenta
+            mantener el buffer lleno:
+          </p>
+          <ul className="mt-2 space-y-1 list-disc list-inside">
+            <li><strong>Buffer muy lleno</strong> → puede arriesgarse a pedir calidad más alta</li>
+            <li><strong>Buffer casi vacío</strong> → baja calidad urgentemente para evitar corte</li>
+            <li><strong>Buffer vacío</strong> → buffering (la rueda giratoria)</li>
+          </ul>
+          <p className="mt-2">
+            Este buffer es la razón por la que cuando empieza un video hay
+            unos segundos de carga inicial.
+          </p>
+        </InfoCallout>
+
+        <ExampleBlock title="Selección de chunk en DASH">
+          <div className="font-mono text-xs space-y-1 bg-white/60 dark:bg-white/[0.07] rounded p-3">
+            <p>Ancho de banda medido:   3 Mbps</p>
+            <p>Versiones disponibles:   300 kbps | 1 Mbps | 2.5 Mbps | 5 Mbps | 8 Mbps</p>
+            <p className="pt-1 border-t border-amber-300">
+              → Cliente elige <strong>2.5 Mbps</strong> (por debajo del ancho de banda medido, con margen de seguridad)
+            </p>
+            <p>Buffer actual: 15 s (saludable) → podría intentar <strong>5 Mbps</strong> en el próximo chunk</p>
+            <p>Si ese chunk tarda demasiado → buffer cae → vuelve a <strong>2.5 Mbps</strong></p>
+          </div>
+          <p className="mt-2 text-xs text-muted">
+            Esta decisión ocurre cada pocos segundos, cientos de veces durante la reproducción de un video.
+          </p>
+        </ExampleBlock>
+
+        <ComparisonTable
+          headers={["Característica", "Streaming Tradicional (bitrate fijo)", "DASH (adaptativo)"]}
+          rows={[
+            ["Calidad", "Fija (puede ser baja)", "Variable pero óptima para la red"],
+            ["Buffering", "Frecuente con red variable", "Mínimo gracias a adaptación"],
+            ["Infraestructura", "Servidores de streaming especiales", "HTTP estándar + CDN"],
+            ["Protocolo", "RTSP, RTMP", "HTTP/HTTPS"],
+            ["Ejemplos", "Streams en vivo básicos", "Netflix, YouTube, Disney+, HBO"],
+          ]}
+        />
+      </SectionBlock>
+
+      {/* ============================================ */}
+      {/* SECCIÓN 7: CDN */}
+      {/* ============================================ */}
+      <SectionBlock id="cdn" title="CDN: Redes de Distribución de Contenido">
+        <p className="text-muted leading-relaxed">
+          Si Netflix tuviera un único servidor en California, un usuario en
+          Buenos Aires sufriría enorme latencia y el enlace transatlántico se
+          congestionaría. La solución son las{" "}
+          <strong>CDNs (Content Delivery Networks)</strong>: redes de
+          servidores distribuidos geográficamente que almacenan copias del
+          contenido y lo sirven desde el servidor más cercano al usuario.
+        </p>
+
+        <InfoCallout variant="info" title="Analogía: la cadena de supermercados">
+          <p>
+            Una CDN es como una cadena de supermercados. En lugar de que todos
+            compren desde un único almacén central (alta latencia, congestión),
+            hay sucursales en cada barrio (baja latencia, alta disponibilidad).
+            Cada sucursal tiene los productos más demandados; los productos
+            raros se piden al almacén central.
+          </p>
+        </InfoCallout>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ConceptCard
+            title="¿Cómo funciona una CDN?"
+            icon={Globe}
+            color="bg-blue-50 text-blue-700 border-blue-200"
+          >
+            <ul className="space-y-1.5 list-disc list-inside">
+              <li>La CDN distribuye miles de <strong>servidores edge</strong> (nodos) en todo el mundo</li>
+              <li>Cuando un usuario solicita video.mp4, <strong>DNS redirige</strong> la solicitud al nodo CDN más cercano (geografía + carga)</li>
+              <li>Si ese nodo tiene el archivo en caché → <strong>hit</strong>, baja latencia</li>
+              <li>Si no → lo descarga del servidor de origen, lo cachea, y lo sirve (<strong>miss</strong>)</li>
+              <li>Las solicitudes posteriores del mismo contenido en esa región → hit</li>
+            </ul>
+          </ConceptCard>
+
+          <ConceptCard
+            title="Estrategias de Ubicación de Servidores CDN"
+            icon={Network}
+            color="bg-violet-50 text-violet-700 border-violet-200"
+          >
+            <ul className="space-y-1.5 list-disc list-inside">
+              <li>
+                <strong>Enter Deep:</strong> colocar servidores CDN{" "}
+                <em>dentro</em> de las redes de acceso de los ISPs. Muy cerca
+                del usuario, latencia muy baja. Difícil de mantener (miles de
+                ubicaciones). Estrategia de <strong>Akamai</strong>.
+              </li>
+              <li>
+                <strong>Bring Home:</strong> colocar servidores CDN en{" "}
+                <strong>IXPs</strong> (puntos de intercambio de tráfico), cerca
+                de los ISPs pero no dentro. Menos ubicaciones, más fácil de
+                gestionar. Estrategia de <strong>Netflix Open Connect</strong>{" "}
+                y Limelight/Edgio.
+              </li>
+            </ul>
+          </ConceptCard>
+        </div>
+
+        <ExampleBlock title="El flujo completo de Netflix con CDN">
+          <div className="font-mono text-xs space-y-1 bg-white/60 dark:bg-white/[0.07] rounded p-3">
+            <p className="font-bold">Escenario: usuario en Buenos Aires busca una película</p>
+            <p className="pt-1">1. Cliente → DNS local: &quot;¿IP de video.netflix.com?&quot;</p>
+            <p>2. DNS local → DNS de Netflix: consulta</p>
+            <p>3. DNS Netflix devuelve IP del nodo CDN más cercano (Open Connect en CABASE)</p>
+            <p>4. Cliente → CDN en CABASE: GET /pelicula.mpd  (latencia: ~5 ms vs ~180 ms a California)</p>
+            <p>5. CDN responde con manifest DASH (película ya cacheada por solicitudes anteriores)</p>
+            <p>6. Cliente solicita chunks al CDN según algoritmo DASH</p>
+            <p className="pt-1 border-t border-amber-300">
+              → Descarga a 25 Mbps <strong>sin cruzar el enlace transoceánico</strong>
+            </p>
+          </div>
+        </ExampleBlock>
+
+        <InfoCallout variant="info" title="CDNs y el Desafío del &quot;Cluster Correcto&quot;">
+          <p>
+            La CDN debe decidir qué servidor asignar a cada cliente. Factores:{" "}
+            <strong>distancia geográfica</strong> (latencia),{" "}
+            <strong>carga actual del servidor</strong> (balanceo de carga),{" "}
+            <strong>disponibilidad del contenido en caché</strong>. Algunos
+            CDNs usan <strong>Anycast DNS</strong>: el mismo nombre DNS
+            resuelve a diferentes IPs según la ubicación del resolver. El
+            cliente ni sabe desde qué país se está sirviendo el contenido.
+          </p>
+        </InfoCallout>
+
+        <ComparisonTable
+          headers={["CDN", "Estrategia", "Escala", "Clientes destacados"]}
+          rows={[
+            ["Akamai", "Enter Deep (redes de ISPs)", ">4 000 ubicaciones, >350 k servidores", "Adobe, Apple, Microsoft"],
+            ["Cloudflare", "IXPs + redes propias", ">300 ciudades", "Millones de sitios web"],
+            ["Netflix Open Connect", "IXPs + ISPs socios", ">1 000 ubicaciones", "Solo Netflix"],
+            ["AWS CloudFront", "Edge locations propias de Amazon", ">600 puntos de presencia", "Clientes de AWS"],
+          ]}
+        />
+      </SectionBlock>
+
+      {/* ============================================ */}
+      {/* SECCIÓN 8: Programación de Sockets */}
       {/* ============================================ */}
       <SectionBlock id="sockets" title="Programación de Sockets">
         <p className="text-muted leading-relaxed">

@@ -19,6 +19,7 @@ import {
   MonitorSmartphone,
   Clock,
   Layers,
+  Building2,
 } from "lucide-react";
 
 const chapter = chapters[0];
@@ -191,6 +192,193 @@ export default function Capitulo1() {
             que más de 10 estén activos simultáneamente es menor al 0.04%.
             Se atienden <strong>3.5 veces más usuarios</strong> con el mismo
             enlace.
+          </p>
+        </ExampleBlock>
+      </SectionBlock>
+
+      {/* ============================================ */}
+      {/* SECCIÓN 3b: Jerarquía de ISPs */}
+      {/* ============================================ */}
+      <SectionBlock
+        id="isp-jerarquia"
+        title="Estructura de Internet: Jerarquía de ISPs"
+      >
+        <p className="text-muted leading-relaxed">
+          Internet no es una red única, sino una{" "}
+          <strong>red de redes</strong> organizada jerárquicamente. Entender
+          quién conecta a quién, y bajo qué acuerdos económicos, es fundamental
+          para comprender cómo fluye el tráfico globalmente.
+        </p>
+
+        <InfoCallout variant="tip" title="Analogía: El sistema de autopistas">
+          <p>
+            Internet es como el sistema de carreteras: las{" "}
+            <strong>calles locales</strong> (ISP de acceso, Tier 3) conectan
+            hogares y empresas a{" "}
+            <strong>rutas provinciales</strong> (ISP regionales, Tier 2), que a
+            su vez se conectan a las{" "}
+            <strong>autopistas nacionales e internacionales</strong> (ISP Tier
+            1). Los peajes donde las autopistas se cruzan son los{" "}
+            <strong>IXP</strong> (Internet Exchange Points).
+          </p>
+        </InfoCallout>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <ConceptCard
+            title="ISP de Acceso — Tier 3"
+            icon={Building2}
+            color="bg-indigo-50 text-indigo-700 border-indigo-200"
+          >
+            <p>
+              El <strong>último kilómetro</strong>. Conectan usuarios finales y
+              empresas a Internet. Pagan a ISPs de nivel superior (transit) para
+              alcanzar el resto de Internet. Ejemplos: Fibertel, Claro,
+              Movistar, Telecentro.
+            </p>
+          </ConceptCard>
+          <ConceptCard
+            title="ISP Regionales — Tier 2"
+            icon={Globe}
+            color="bg-cyan-50 text-cyan-700 border-cyan-200"
+          >
+            <p>
+              Cubren regiones geográficas o países enteros. Se conectan a Tier 1
+              pagando <strong>transit</strong> y entre sí mediante{" "}
+              <strong>peering</strong> (acuerdos gratuitos). Ejemplos: IFX
+              Networks, GTD, Cablevision Business.
+            </p>
+          </ConceptCard>
+          <ConceptCard
+            title="ISP Tier 1 — Columna Vertebral"
+            icon={Server}
+            color="bg-blue-50 text-blue-700 border-blue-200"
+          >
+            <p>
+              La <strong>columna vertebral de Internet</strong>. Presencia
+              global, se interconectan entre sí sin pagar (peering entre pares).
+              No necesitan pagar a nadie para llegar a cualquier destino.
+              Ejemplos: AT&amp;T, NTT, Level 3/Lumen, Telia.
+            </p>
+          </ConceptCard>
+        </div>
+
+        <ComparisonTable
+          headers={["Nivel", "Rol", "Relación económica", "Ejemplos"]}
+          rows={[
+            [
+              "Tier 1",
+              "Columna vertebral global",
+              "Peering gratuito entre Tier 1; cobran transit a Tier 2",
+              "AT&T, NTT, Level 3/Lumen, Telia",
+            ],
+            [
+              "Tier 2",
+              "ISP regional o nacional",
+              "Pagan transit a Tier 1; peering con otros Tier 2",
+              "IFX Networks, GTD, Telecom Argentina",
+            ],
+            [
+              "Tier 3 (Acceso)",
+              "Último kilómetro",
+              "Pagan transit a Tier 2 o Tier 1",
+              "Fibertel, Claro, Movistar, Telecentro",
+            ],
+            [
+              "IXP",
+              "Punto de intercambio de tráfico",
+              "Facilita peering sin costo entre participantes",
+              "CABASE (Buenos Aires), DE-CIX, AMS-IX",
+            ],
+            [
+              "Proveedor de Contenido",
+              "Red privada global propia",
+              "Peering directo con ISPs e IXPs; evita Tier 1 cuando es posible",
+              "Google, Netflix, Facebook/Meta",
+            ],
+          ]}
+        />
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ConceptCard
+            title="IXPs: Internet Exchange Points"
+            icon={Router}
+            color="bg-emerald-50 text-emerald-700 border-emerald-200"
+          >
+            <p>
+              Puntos de interconexión física donde múltiples ISPs intercambian
+              tráfico directamente (<strong>peering</strong>) sin pasar por un
+              intermediario. Reducen latencia y costos. Argentina tiene el{" "}
+              <strong>CABASE IXP</strong> en Buenos Aires.
+            </p>
+            <p className="mt-2 text-sm italic">
+              Analogía: es como un mercado mayorista central donde los
+              distribuidores se venden entre sí directamente, eliminando
+              intermediarios y abaratando costos.
+            </p>
+          </ConceptCard>
+          <ConceptCard
+            title="Redes de Proveedores de Contenido"
+            icon={Globe}
+            color="bg-purple-50 text-purple-700 border-purple-200"
+          >
+            <p>
+              Google, Netflix y Meta construyen sus propias{" "}
+              <strong>redes privadas globales</strong> con cientos de puntos de
+              presencia (PoPs) en todo el mundo. Se conectan directamente a ISPs
+              e IXPs, saltando a los Tier 1 cuando es posible. Resultado:
+              menores costos y mejor rendimiento para el usuario.
+            </p>
+          </ConceptCard>
+        </div>
+
+        <InfoCallout variant="info" title="Peering vs Transit">
+          <p>
+            <strong>Transit (relación cliente-proveedor):</strong> el ISP de
+            nivel inferior paga al superior para alcanzar{" "}
+            <em>toda</em> Internet. Es como pagar por acceso a la autopista
+            completa.
+          </p>
+          <p className="mt-2">
+            <strong>Peering (acuerdo entre pares):</strong> dos ISPs del mismo
+            nivel intercambian tráfico <em>sin costo</em> entre sí. Solo
+            intercambian tráfico destinado a sus propias redes (o clientes
+            directos), no tráfico de tránsito. Es beneficio mutuo: ambos
+            evitan pagar a un intermediario.
+          </p>
+        </InfoCallout>
+
+        <ExampleBlock title="¿Cómo llega un paquete de Buenos Aires a Tokio?">
+          <p>
+            Un usuario de Fibertel en Buenos Aires abre una página en un
+            servidor japonés de NTT. El camino probable:
+          </p>
+          <ol className="list-decimal list-inside space-y-1 mt-2">
+            <li>
+              <strong>Fibertel (Tier 3 AR)</strong> — el paquete sale del hogar
+              y llega al router de borde de Fibertel.
+            </li>
+            <li>
+              <strong>Telecom Argentina (Tier 2)</strong> — Fibertel entrega el
+              paquete a su ISP upstream, que tiene mayor conectividad
+              internacional.
+            </li>
+            <li>
+              <strong>Level 3/Lumen (Tier 1)</strong> — el ISP regional paga
+              transit a un Tier 1 global con cables submarinos transpacíficos.
+            </li>
+            <li>
+              <strong>NTT (Tier 1 JP)</strong> — Level 3 y NTT hacen peering
+              gratuito; el paquete entra a la red de NTT en Japón.
+            </li>
+            <li>
+              <strong>Servidor destino</strong> — NTT entrega el paquete al
+              servidor japonés.
+            </li>
+          </ol>
+          <p className="mt-2 text-sm">
+            Todo este recorrido de más de 18,000 km ocurre en menos de{" "}
+            <strong>200 ms</strong> (velocidad de propagación de la fibra
+            ≈ 200,000 km/s).
           </p>
         </ExampleBlock>
       </SectionBlock>
