@@ -466,6 +466,133 @@ const LINK_LEGEND = [
   { label: "Bidireccional", color: "#a78bfa", dash: true },
 ];
 
+// ─── Layer encapsulation ─────────────────────────────────────────────────────
+
+interface LayerState {
+  protocol: string;
+  active: boolean;
+}
+
+interface LayerStates {
+  app: LayerState;
+  transport: LayerState;
+  network: LayerState;
+  link: LayerState;
+  physical: LayerState;
+}
+
+const LAYERS_DEF = [
+  { key: "app" as const, name: "Aplicación", pdu: "Mensaje", color: "#539bf5" },
+  { key: "transport" as const, name: "Transporte", pdu: "Segmento", color: "#57ab5a" },
+  { key: "network" as const, name: "Red", pdu: "Datagrama", color: "#f69d50" },
+  { key: "link" as const, name: "Enlace", pdu: "Trama", color: "#daaa3f" },
+  { key: "physical" as const, name: "Física", pdu: "Bits", color: "#e05d44" },
+];
+
+function getLayerStates(stepIdx: number): LayerStates {
+  // DHCP (0-2): all layers active
+  if (stepIdx <= 2) {
+    const dhcpMsg = ["Discover", "Offer", "Req+ACK"][stepIdx];
+    return {
+      app: { protocol: `DHCP ${dhcpMsg}`, active: true },
+      transport: { protocol: "UDP 68↔67", active: true },
+      network: { protocol: stepIdx === 0 ? "IP (broadcast)" : "IP", active: true },
+      link: { protocol: "Ethernet + WiFi", active: true },
+      physical: { protocol: "Radio WiFi 2.4/5 GHz", active: true },
+    };
+  }
+  // ARP (3-4): only link + physical
+  if (stepIdx <= 4) {
+    return {
+      app: { protocol: "—", active: false },
+      transport: { protocol: "—", active: false },
+      network: { protocol: "—", active: false },
+      link: { protocol: stepIdx === 3 ? "ARP Request + Eth" : "ARP Reply + Eth", active: true },
+      physical: { protocol: "Radio WiFi", active: true },
+    };
+  }
+  // DNS (5-7)
+  if (stepIdx <= 7) {
+    const dnsMsg = stepIdx === 5 ? "DNS Query" : stepIdx === 6 ? "DNS Iterativo" : "DNS Response";
+    return {
+      app: { protocol: dnsMsg, active: true },
+      transport: { protocol: "UDP :53", active: true },
+      network: { protocol: "IP + NAT", active: true },
+      link: { protocol: "Ethernet + WiFi", active: true },
+      physical: { protocol: "Radio WiFi", active: true },
+    };
+  }
+  // TCP handshake (8-10): no app data
+  if (stepIdx <= 10) {
+    const tcpMsg = ["TCP SYN", "TCP SYN-ACK", "TCP ACK"][stepIdx - 8];
+    return {
+      app: { protocol: "—", active: false },
+      transport: { protocol: tcpMsg, active: true },
+      network: { protocol: "IP + NAT", active: true },
+      link: { protocol: "Ethernet + WiFi", active: true },
+      physical: { protocol: "Radio WiFi", active: true },
+    };
+  }
+  // TLS (11-13)
+  if (stepIdx <= 13) {
+    const tlsMsg = ["ClientHello", "ServerHello", "Finished"][stepIdx - 11];
+    return {
+      app: { protocol: `TLS ${tlsMsg}`, active: true },
+      transport: { protocol: "TCP", active: true },
+      network: { protocol: "IP + NAT", active: true },
+      link: { protocol: "Ethernet + WiFi", active: true },
+      physical: { protocol: "Radio WiFi", active: true },
+    };
+  }
+  // HTTP (14-16): step 16 is TCP ACKs, no app
+  if (stepIdx <= 16) {
+    return {
+      app: { protocol: stepIdx === 14 ? "HTTP/2 GET" : stepIdx === 15 ? "HTTP/2 200" : "—", active: stepIdx <= 15 },
+      transport: { protocol: "TCP", active: true },
+      network: { protocol: "IP + NAT", active: true },
+      link: { protocol: "Ethernet + WiFi", active: true },
+      physical: { protocol: "Radio WiFi", active: true },
+    };
+  }
+  // CDN/Final (17-19)
+  return {
+    app: { protocol: stepIdx === 17 ? "DNS múltiple" : stepIdx === 18 ? "HTTP/2 mux" : "Todos", active: true },
+    transport: { protocol: stepIdx === 17 ? "UDP" : "TCP paralelo", active: true },
+    network: { protocol: "IP + NAT", active: true },
+    link: { protocol: "Ethernet + WiFi", active: true },
+    physical: { protocol: "Radio WiFi", active: true },
+  };
+}
+
+function getPacketBlocks(layerIdx: number, ls: LayerStates): { label: string; color: string }[] {
+  const C = { app: "#539bf5", transport: "#57ab5a", network: "#f69d50", link: "#daaa3f", physical: "#e05d44", payload: "#768390" };
+
+  // Physical = just bits
+  if (layerIdx === 4) return [{ label: "0110 1001 0101 0110 1100...", color: C.physical }];
+
+  const blocks: { label: string; color: string }[] = [];
+
+  // Headers from outermost (link) inward — only include if layer is reached
+  if (layerIdx >= 3 && ls.link.active) blocks.push({ label: "Eth", color: C.link });
+  if (layerIdx >= 2 && ls.network.active) blocks.push({ label: "IP", color: C.network });
+  if (layerIdx >= 1 && ls.transport.active) {
+    blocks.push({ label: ls.transport.protocol.includes("UDP") ? "UDP" : "TCP", color: C.transport });
+  }
+
+  // Application data (innermost content)
+  if (ls.app.active && ls.app.protocol !== "—") {
+    blocks.push({ label: ls.app.protocol.length > 11 ? ls.app.protocol.slice(0, 11) : ls.app.protocol, color: C.app });
+  } else if (!ls.transport.active && !ls.network.active && ls.link.active) {
+    // Layer 2 only (ARP) — the ARP message is the Ethernet payload
+    blocks.push({ label: "ARP", color: C.payload });
+  }
+
+  // FCS trailer at link layer
+  if (layerIdx >= 3 && ls.link.active) blocks.push({ label: "FCS", color: C.link });
+
+  return blocks;
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function WebRequestJourney() {
@@ -478,6 +605,7 @@ export function WebRequestJourney() {
 
   const currentPhase = PHASES.find((p) => p.steps.includes(stepIdx));
   const flowPath = buildFlowPath(step);
+  const layerStates = getLayerStates(stepIdx);
 
   return (
     <div className="space-y-5 rounded-xl border border-border bg-card p-4 sm:p-6">
@@ -646,20 +774,106 @@ export function WebRequestJourney() {
         ))}
       </div>
 
-      {/* ── Info panel ──────────────────────────────────────────────────── */}
-      <div className="rounded-lg border border-border bg-background p-4 space-y-3">
-        {/* Protocol stack */}
-        <div className="font-mono text-xs bg-white/60 dark:bg-white/[0.07] rounded p-3 text-foreground">
-          <span className="text-muted font-sans font-semibold text-[11px] uppercase tracking-wider block mb-1">
-            Stack de Protocolos
-          </span>
-          {step.protocolStack}
+      {/* ── Packet Tracer – Encapsulation Stack ─────────────────────── */}
+      <div className="rounded-lg border border-border bg-[#1c2128] overflow-hidden">
+        {/* PT-style header bar */}
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-[#2d333b] border-b border-border">
+          <span className="text-[10px] sm:text-xs font-bold text-foreground tracking-wide">PDU Information</span>
+          <span className="text-[9px] text-muted ml-auto">Encapsulamiento ↓ / Desencapsulamiento ↑</span>
         </div>
 
+        {/* Layer rows */}
+        <div className="divide-y divide-border/40">
+          {LAYERS_DEF.map((layer, i) => {
+            const state = layerStates[layer.key];
+            const blocks = getPacketBlocks(i, layerStates);
+            const showBlocks = state.active || (layer.key === "physical" && layerStates.link.active);
+            const layerNum = 5 - i;
+
+            return (
+              <div
+                key={layer.key}
+                className="flex items-stretch transition-all duration-300"
+              >
+                {/* Layer number */}
+                <div
+                  className="w-8 sm:w-10 flex items-center justify-center font-mono font-black text-sm sm:text-base flex-shrink-0"
+                  style={{
+                    color: state.active ? layer.color : "#444c56",
+                    backgroundColor: state.active ? layer.color + "12" : "#1c2128",
+                  }}
+                >
+                  {layerNum}
+                </div>
+
+                {/* Layer name column */}
+                <div
+                  className="w-[68px] sm:w-[88px] flex flex-col items-center justify-center py-2 px-1 text-center flex-shrink-0 border-l border-r transition-all duration-300"
+                  style={{
+                    backgroundColor: state.active ? layer.color : "#2d333b",
+                    borderColor: state.active ? layer.color + "60" : "#444c56",
+                  }}
+                >
+                  <span className={`text-[9px] sm:text-[10px] font-bold leading-tight ${state.active ? "text-white" : "text-[#545d68]"}`}>
+                    {layer.name}
+                  </span>
+                  <span className={`text-[7px] sm:text-[8px] ${state.active ? "text-white/70" : "text-[#545d68]/60"}`}>
+                    {layer.pdu}
+                  </span>
+                </div>
+
+                {/* Protocol + PDU blocks OR disabled state */}
+                <div className={`flex-1 flex items-center min-w-0 py-2 px-2 sm:px-3 transition-all duration-300 ${
+                  state.active ? "bg-[#22272e]" : "bg-[#1c2128]"
+                }`}>
+                  {state.active ? (
+                    <div className="flex flex-col gap-1 min-w-0 w-full">
+                      {/* Protocol label + status */}
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] sm:text-xs font-semibold" style={{ color: layer.color }}>
+                          ✓
+                        </span>
+                        <span className="text-[9px] sm:text-[11px] text-foreground font-medium truncate">
+                          {state.protocol}
+                        </span>
+                      </div>
+                      {/* Packet blocks */}
+                      {showBlocks && blocks.length > 0 && (
+                        <div className="flex gap-[2px] items-center overflow-x-auto pb-0.5">
+                          {blocks.map((block, j) => (
+                            <div
+                              key={j}
+                              className="h-[18px] sm:h-5 flex items-center justify-center text-[7px] sm:text-[8px] font-mono font-bold text-white rounded-[3px] px-1 sm:px-1.5 whitespace-nowrap flex-shrink-0"
+                              style={{ backgroundColor: block.color }}
+                            >
+                              {block.label}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    /* Disabled / not used */
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] sm:text-xs text-[#e0544488]">✕</span>
+                      <span className="text-[9px] sm:text-[10px] text-[#545d68] italic">
+                        No utilizada en este paso
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Info panel ──────────────────────────────────────────────────── */}
+      <div className="rounded-lg border border-border bg-background p-4 space-y-3">
         {/* Description */}
         <p className="text-sm text-foreground leading-relaxed">{step.description}</p>
 
-        {/* Packet detail (collapsible on mobile) */}
+        {/* Packet detail (collapsible) */}
         <details className="group">
           <summary className="cursor-pointer text-xs font-semibold text-muted hover:text-foreground transition-colors select-none">
             📦 Ver detalle del paquete
