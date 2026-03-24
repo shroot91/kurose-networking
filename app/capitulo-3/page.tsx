@@ -42,7 +42,7 @@ export default function Capitulo3() {
           <ConceptCard
             title="Multiplexación"
             icon={Layers}
-            color="bg-blue-50 text-blue-700 border-blue-200"
+            color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
           >
             <p>
               <strong>En el emisor:</strong> recoger datos de múltiples sockets
@@ -54,7 +54,7 @@ export default function Capitulo3() {
           <ConceptCard
             title="Demultiplexación"
             icon={ArrowLeftRight}
-            color="bg-emerald-50 text-emerald-700 border-emerald-200"
+            color="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800"
           >
             <p>
               <strong>En el receptor:</strong> examinar los campos de puerto en la
@@ -187,7 +187,7 @@ export default function Capitulo3() {
         </svg>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <ConceptCard title="Ventajas de UDP" icon={Zap} color="bg-emerald-50 text-emerald-700 border-emerald-200">
+          <ConceptCard title="Ventajas de UDP" icon={Zap} color="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800">
             <ul className="space-y-1 list-disc list-inside">
               <li>Sin establecimiento de conexión (sin retardo adicional)</li>
               <li>Sin estado de conexión (más conexiones simultáneas)</li>
@@ -196,7 +196,7 @@ export default function Capitulo3() {
               <li>Ideal para: DNS, streaming, juegos online, VoIP</li>
             </ul>
           </ConceptCard>
-          <ConceptCard title="Checksum UDP" icon={Shield} color="bg-amber-50 text-amber-700 border-amber-200">
+          <ConceptCard title="Checksum UDP" icon={Shield} color="bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-800">
             <p>
               El checksum verifica la integridad del segmento. Se calcula sumando
               todas las palabras de 16 bits del segmento (header + datos) usando
@@ -336,7 +336,7 @@ export default function Capitulo3() {
           <ConceptCard
             title="SampleRTT y EstimatedRTT"
             icon={Timer}
-            color="bg-blue-50 text-blue-700 border-blue-200"
+            color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
           >
             <p>
               <strong>SampleRTT</strong>: tiempo medido entre el envío de un
@@ -353,7 +353,7 @@ export default function Capitulo3() {
           <ConceptCard
             title="DevRTT y TimeoutInterval"
             icon={Activity}
-            color="bg-amber-50 text-amber-700 border-amber-200"
+            color="bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-800"
           >
             <p>
               <strong>DevRTT</strong>: mide la <em>variabilidad</em> del RTT
@@ -458,7 +458,7 @@ export default function Capitulo3() {
           <ConceptCard
             title="Los 4 pasos del cierre"
             icon={ArrowLeftRight}
-            color="bg-blue-50 text-blue-700 border-blue-200"
+            color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
           >
             <ol className="space-y-1.5 list-decimal list-inside text-sm">
               <li>
@@ -484,7 +484,7 @@ export default function Capitulo3() {
           <ConceptCard
             title="TIME_WAIT y RST"
             icon={Timer}
-            color="bg-amber-50 text-amber-700 border-amber-200"
+            color="bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-800"
           >
             <p>
               <strong>TIME_WAIT</strong>: después del último ACK, el cliente
@@ -621,7 +621,7 @@ export default function Capitulo3() {
           <ConceptCard
             title="Slow Start"
             icon={Activity}
-            color="bg-blue-50 text-blue-700 border-blue-200"
+            color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
           >
             <p>
               Inicio con cwnd = 1 MSS. Se <strong>duplica</strong> cada RTT
@@ -632,7 +632,7 @@ export default function Capitulo3() {
           <ConceptCard
             title="Congestion Avoidance"
             icon={Shield}
-            color="bg-emerald-50 text-emerald-700 border-emerald-200"
+            color="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800"
           >
             <p>
               Una vez cwnd ≥ ssthresh, crece <strong>linealmente</strong> (+1 MSS
@@ -643,7 +643,7 @@ export default function Capitulo3() {
           <ConceptCard
             title="Reacción ante pérdida"
             icon={Timer}
-            color="bg-red-50 text-red-700 border-red-200"
+            color="bg-red-50 text-red-700 border-red-200 dark:bg-red-950/30 dark:text-red-300 dark:border-red-800"
           >
             <p>
               <strong>Timeout:</strong> ssthresh = cwnd/2, cwnd = 1 MSS (vuelve a
@@ -704,7 +704,7 @@ export default function Capitulo3() {
         <SlidingWindow />
 
         <div className="grid gap-4 sm:grid-cols-2 mt-6">
-          <ConceptCard title="Go-Back-N (GBN)" icon={ArrowLeftRight} color="bg-blue-50 text-blue-700 border-blue-200">
+          <ConceptCard title="Go-Back-N (GBN)" icon={ArrowLeftRight} color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800">
             <ul className="space-y-1 list-disc list-inside">
               <li>El receptor solo acepta paquetes <strong>en orden</strong></li>
               <li>Usa <strong>ACKs acumulativos</strong> (ACK n confirma todo hasta n)</li>
@@ -712,7 +712,7 @@ export default function Capitulo3() {
               <li>Simple pero ineficiente con alta tasa de pérdida</li>
             </ul>
           </ConceptCard>
-          <ConceptCard title="Selective Repeat (SR)" icon={ArrowLeftRight} color="bg-purple-50 text-purple-700 border-purple-200">
+          <ConceptCard title="Selective Repeat (SR)" icon={ArrowLeftRight} color="bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/30 dark:text-purple-300 dark:border-purple-800">
             <ul className="space-y-1 list-disc list-inside">
               <li>El receptor acepta paquetes <strong>fuera de orden</strong> y los almacena</li>
               <li>Usa <strong>ACKs individuales</strong> para cada paquete</li>

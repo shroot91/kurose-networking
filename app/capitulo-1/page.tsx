@@ -42,7 +42,7 @@ export default function Capitulo1() {
           <ConceptCard
             title="Vista de Hardware"
             icon={Server}
-            color="bg-blue-50 text-blue-700 border-blue-200"
+            color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
           >
             <p>
               Internet es una red de redes que interconecta miles de millones de{" "}
@@ -55,7 +55,7 @@ export default function Capitulo1() {
           <ConceptCard
             title="Vista de Servicios"
             icon={Globe}
-            color="bg-emerald-50 text-emerald-700 border-emerald-200"
+            color="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800"
           >
             <p>
               Internet es una <strong>infraestructura</strong> que proporciona
@@ -119,12 +119,12 @@ export default function Capitulo1() {
         />
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <ConceptCard title="DSL (Digital Subscriber Line)" icon={Cable} color="bg-indigo-50 text-indigo-700 border-indigo-200">
+          <ConceptCard title="DSL (Digital Subscriber Line)" icon={Cable} color="bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/30 dark:text-indigo-300 dark:border-indigo-800">
             <p>
               Usa la línea telefónica existente. El módem DSL convierte datos digitales en tonos de alta frecuencia. La velocidad depende de la <strong>distancia al central telefónico</strong> (DSLAM). Bajada y subida asimétricas (ADSL).
             </p>
           </ConceptCard>
-          <ConceptCard title="FTTH (Fibra al Hogar)" icon={Wifi} color="bg-cyan-50 text-cyan-700 border-cyan-200">
+          <ConceptCard title="FTTH (Fibra al Hogar)" icon={Wifi} color="bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-950/30 dark:text-cyan-300 dark:border-cyan-800">
             <p>
               Provee un camino de fibra óptica directo desde el central hasta el hogar. Ofrece las <strong>velocidades más altas</strong> disponibles. Usa splitters ópticos (PON) o conexiones punto a punto.
             </p>
@@ -155,7 +155,7 @@ export default function Capitulo1() {
         <PacketSwitching />
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <ConceptCard title="Conmutación de Paquetes" icon={Layers} color="bg-blue-50 text-blue-700 border-blue-200">
+          <ConceptCard title="Conmutación de Paquetes" icon={Layers} color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800">
             <ul className="space-y-1.5 list-disc list-inside">
               <li>Los datos se dividen en <strong>paquetes</strong></li>
               <li>Cada paquete se envía independientemente</li>
@@ -164,7 +164,7 @@ export default function Capitulo1() {
               <li>Puede haber <strong>congestión</strong> y pérdida si los buffers se llenan</li>
             </ul>
           </ConceptCard>
-          <ConceptCard title="Conmutación de Circuitos" icon={Cable} color="bg-purple-50 text-purple-700 border-purple-200">
+          <ConceptCard title="Conmutación de Circuitos" icon={Cable} color="bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/30 dark:text-purple-300 dark:border-purple-800">
             <ul className="space-y-1.5 list-disc list-inside">
               <li>Se establece un <strong>circuito dedicado</strong> antes de comunicar</li>
               <li>Recursos reservados de extremo a extremo</li>
@@ -227,7 +227,7 @@ export default function Capitulo1() {
           <ConceptCard
             title="ISP de Acceso — Tier 3"
             icon={Building2}
-            color="bg-indigo-50 text-indigo-700 border-indigo-200"
+            color="bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/30 dark:text-indigo-300 dark:border-indigo-800"
           >
             <p>
               El <strong>último kilómetro</strong>. Conectan usuarios finales y
@@ -239,7 +239,7 @@ export default function Capitulo1() {
           <ConceptCard
             title="ISP Regionales — Tier 2"
             icon={Globe}
-            color="bg-cyan-50 text-cyan-700 border-cyan-200"
+            color="bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-950/30 dark:text-cyan-300 dark:border-cyan-800"
           >
             <p>
               Cubren regiones geográficas o países enteros. Se conectan a Tier 1
@@ -251,7 +251,7 @@ export default function Capitulo1() {
           <ConceptCard
             title="ISP Tier 1 — Columna Vertebral"
             icon={Server}
-            color="bg-blue-50 text-blue-700 border-blue-200"
+            color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
           >
             <p>
               La <strong>columna vertebral de Internet</strong>. Presencia
@@ -302,7 +302,7 @@ export default function Capitulo1() {
           <ConceptCard
             title="IXPs: Internet Exchange Points"
             icon={Router}
-            color="bg-emerald-50 text-emerald-700 border-emerald-200"
+            color="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800"
           >
             <p>
               Puntos de interconexión física donde múltiples ISPs intercambian
@@ -319,7 +319,7 @@ export default function Capitulo1() {
           <ConceptCard
             title="Redes de Proveedores de Contenido"
             icon={Globe}
-            color="bg-purple-50 text-purple-700 border-purple-200"
+            color="bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/30 dark:text-purple-300 dark:border-purple-800"
           >
             <p>
               Google, Netflix y Meta construyen sus propias{" "}
@@ -397,14 +397,14 @@ export default function Capitulo1() {
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <ConceptCard title="Retardo de Procesamiento" icon={Clock} color="bg-blue-50 text-blue-700 border-blue-200">
+          <ConceptCard title="Retardo de Procesamiento" icon={Clock} color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800">
             <p>
               Tiempo que tarda el router en examinar la cabecera del paquete,
               verificar errores de bits y determinar el enlace de salida.
               Típicamente <strong>&lt; 1 ms</strong> en routers modernos.
             </p>
           </ConceptCard>
-          <ConceptCard title="Retardo de Cola" icon={Clock} color="bg-purple-50 text-purple-700 border-purple-200">
+          <ConceptCard title="Retardo de Cola" icon={Clock} color="bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/30 dark:text-purple-300 dark:border-purple-800">
             <p>
               Tiempo de espera en el buffer de salida del router. Depende del
               <strong> nivel de congestión</strong>. Puede variar de microsegundos
@@ -412,14 +412,14 @@ export default function Capitulo1() {
               <strong> descarta</strong>.
             </p>
           </ConceptCard>
-          <ConceptCard title="Retardo de Transmisión" icon={Clock} color="bg-amber-50 text-amber-700 border-amber-200">
+          <ConceptCard title="Retardo de Transmisión" icon={Clock} color="bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-800">
             <p>
               Tiempo para &quot;empujar&quot; todos los bits del paquete al enlace.{" "}
               <strong>d_trans = L/R</strong> donde L = tamaño del paquete (bits) y
               R = tasa de transmisión del enlace (bps).
             </p>
           </ConceptCard>
-          <ConceptCard title="Retardo de Propagación" icon={Clock} color="bg-emerald-50 text-emerald-700 border-emerald-200">
+          <ConceptCard title="Retardo de Propagación" icon={Clock} color="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800">
             <p>
               Tiempo que tarda un bit en viajar físicamente de un extremo del
               enlace al otro. <strong>d_prop = d/s</strong> donde d = longitud del

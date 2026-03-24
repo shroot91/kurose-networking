@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { chapters } from "@/data/chapters";
-import { Globe, AppWindow, ArrowLeftRight, BookOpen, Network, Settings, Cable } from "lucide-react";
+import { Globe, AppWindow, ArrowLeftRight, BookOpen, Network, Settings, Cable, ChevronRight } from "lucide-react";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Globe,
@@ -71,6 +71,27 @@ export default function Home() {
               </Link>
             );
           })}
+        </div>
+
+        {/* Retrospectiva banner */}
+        <div className="mt-10">
+          <Link
+            href="/retrospectiva"
+            className="flex items-center gap-4 rounded-xl border border-border bg-card hover:bg-border transition-colors p-6 group"
+          >
+            <div className="rounded-full bg-primary/10 p-3 shrink-0">
+              <BookOpen className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <p className="font-semibold text-foreground group-hover:text-primary-light transition-colors">
+                Retrospectiva: Un día en la vida de una solicitud web
+              </p>
+              <p className="text-sm text-muted mt-0.5">
+                Seguí cada protocolo desde que tu laptop se conecta a WiFi hasta que carga google.com — DHCP → ARP → DNS → TCP → TLS → HTTP/2
+              </p>
+            </div>
+            <ChevronRight className="h-5 w-5 text-muted group-hover:text-primary transition-colors shrink-0 ml-auto" />
+          </Link>
         </div>
 
         {/* Features */}

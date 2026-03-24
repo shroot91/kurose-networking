@@ -46,7 +46,7 @@ export default function Capitulo2() {
           <ConceptCard
             title="Arquitectura Cliente-Servidor"
             icon={Server}
-            color="bg-emerald-50 text-emerald-700 border-emerald-200"
+            color="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800"
           >
             <ul className="space-y-1.5 list-disc list-inside">
               <li>El servidor está <strong>siempre activo</strong> con IP fija</li>
@@ -59,7 +59,7 @@ export default function Capitulo2() {
           <ConceptCard
             title="Arquitectura P2P"
             icon={Network}
-            color="bg-orange-50 text-orange-700 border-orange-200"
+            color="bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950/30 dark:text-orange-300 dark:border-orange-800"
           >
             <ul className="space-y-1.5 list-disc list-inside">
               <li>No hay servidor siempre activo</li>
@@ -124,7 +124,7 @@ export default function Capitulo2() {
           <ConceptCard
             title="Métodos HTTP"
             icon={ArrowRightLeft}
-            color="bg-blue-50 text-blue-700 border-blue-200"
+            color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
           >
             <ul className="space-y-1 list-disc list-inside">
               <li><strong>GET:</strong> Solicita un recurso (el más común)</li>
@@ -137,7 +137,7 @@ export default function Capitulo2() {
           <ConceptCard
             title="Códigos de Estado HTTP"
             icon={FileText}
-            color="bg-purple-50 text-purple-700 border-purple-200"
+            color="bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/30 dark:text-purple-300 dark:border-purple-800"
           >
             <ul className="space-y-1 list-disc list-inside">
               <li><strong>200 OK:</strong> Solicitud exitosa</li>
@@ -246,17 +246,17 @@ export default function Capitulo2() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
-          <ConceptCard title="SMTP" icon={Mail} color="bg-purple-50 text-purple-700 border-purple-200">
+          <ConceptCard title="SMTP" icon={Mail} color="bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/30 dark:text-purple-300 dark:border-purple-800">
             <p>
               Protocolo <strong>push</strong>: envía correo del cliente al servidor y entre servidores. Puerto <strong>25</strong>. Usa TCP. Comandos en texto ASCII (HELO, MAIL FROM, RCPT TO, DATA).
             </p>
           </ConceptCard>
-          <ConceptCard title="POP3" icon={Mail} color="bg-blue-50 text-blue-700 border-blue-200">
+          <ConceptCard title="POP3" icon={Mail} color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800">
             <p>
               Protocolo <strong>pull</strong>: descarga correo del servidor al cliente. Modo download-and-delete o download-and-keep. Simple pero <strong>no sincroniza carpetas</strong>.
             </p>
           </ConceptCard>
-          <ConceptCard title="IMAP" icon={Mail} color="bg-emerald-50 text-emerald-700 border-emerald-200">
+          <ConceptCard title="IMAP" icon={Mail} color="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800">
             <p>
               Protocolo pull más avanzado. Mantiene mensajes <strong>en el servidor</strong>. Permite organizar en carpetas, buscar, y acceder desde <strong>múltiples dispositivos</strong>.
             </p>
@@ -302,12 +302,12 @@ export default function Capitulo2() {
         />
 
         <div className="grid gap-4 sm:grid-cols-2 mt-4">
-          <ConceptCard title="Consulta Iterativa" icon={Search} color="bg-amber-50 text-amber-700 border-amber-200">
+          <ConceptCard title="Consulta Iterativa" icon={Search} color="bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-800">
             <p>
               El servidor DNS local hace todo el trabajo. Contacta secuencialmente al raíz, TLD y autoritativo. Cada servidor responde con &quot;no sé, pero pregúntale a este otro servidor&quot;.
             </p>
           </ConceptCard>
-          <ConceptCard title="Consulta Recursiva" icon={Search} color="bg-cyan-50 text-cyan-700 border-cyan-200">
+          <ConceptCard title="Consulta Recursiva" icon={Search} color="bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-950/30 dark:text-cyan-300 dark:border-cyan-800">
             <p>
               El servidor contactado asume la responsabilidad de resolver completamente la consulta. El raíz preguntaría al TLD, quien preguntaría al autoritativo, y la respuesta regresa por la misma cadena.
             </p>
@@ -367,7 +367,7 @@ export default function Capitulo2() {
         <ConceptCard
           title="Beneficios del Proxy Cache"
           icon={Server}
-          color="bg-blue-50 text-blue-700 border-blue-200"
+          color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
         >
           <ul className="space-y-1.5 list-disc list-inside">
             <li>Reduce tiempo de respuesta (el caché está más cerca del cliente)</li>
@@ -447,7 +447,7 @@ export default function Capitulo2() {
           <ConceptCard
             title="El Problema del Streaming"
             icon={Globe}
-            color="bg-amber-50 text-amber-700 border-amber-200"
+            color="bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-800"
           >
             <ul className="space-y-1.5 list-disc list-inside">
               <li>El ancho de banda de un usuario varía constantemente (congestión, WiFi, movilidad)</li>
@@ -460,7 +460,7 @@ export default function Capitulo2() {
           <ConceptCard
             title="DASH: Dynamic Adaptive Streaming over HTTP"
             icon={Network}
-            color="bg-emerald-50 text-emerald-700 border-emerald-200"
+            color="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800"
           >
             <ul className="space-y-1.5 list-disc list-inside">
               <li>El video se codifica en <strong>múltiples versiones</strong> (300 kbps, 1 Mbps, 4 Mbps, 8 Mbps, 25 Mbps)</li>
@@ -544,7 +544,7 @@ export default function Capitulo2() {
           <ConceptCard
             title="¿Cómo funciona una CDN?"
             icon={Globe}
-            color="bg-blue-50 text-blue-700 border-blue-200"
+            color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800"
           >
             <ul className="space-y-1.5 list-disc list-inside">
               <li>La CDN distribuye miles de <strong>servidores edge</strong> (nodos) en todo el mundo</li>
@@ -558,7 +558,7 @@ export default function Capitulo2() {
           <ConceptCard
             title="Estrategias de Ubicación de Servidores CDN"
             icon={Network}
-            color="bg-violet-50 text-violet-700 border-violet-200"
+            color="bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950/30 dark:text-violet-300 dark:border-violet-800"
           >
             <ul className="space-y-1.5 list-disc list-inside">
               <li>
@@ -627,7 +627,7 @@ export default function Capitulo2() {
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <ConceptCard title="Sockets TCP" icon={Code} color="bg-blue-50 text-blue-700 border-blue-200">
+          <ConceptCard title="Sockets TCP" icon={Code} color="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800">
             <ul className="space-y-1 list-disc list-inside">
               <li><strong>Orientado a conexión:</strong> requiere handshake previo</li>
               <li>El servidor crea un <em>welcoming socket</em> (listen)</li>
@@ -636,7 +636,7 @@ export default function Capitulo2() {
               <li>Secuencia: socket → bind → listen → accept → send/recv</li>
             </ul>
           </ConceptCard>
-          <ConceptCard title="Sockets UDP" icon={Code} color="bg-orange-50 text-orange-700 border-orange-200">
+          <ConceptCard title="Sockets UDP" icon={Code} color="bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950/30 dark:text-orange-300 dark:border-orange-800">
             <ul className="space-y-1 list-disc list-inside">
               <li><strong>Sin conexión:</strong> no requiere handshake</li>
               <li>Cada datagrama incluye dirección destino</li>
