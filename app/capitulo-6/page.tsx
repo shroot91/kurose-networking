@@ -7,6 +7,7 @@ import { ComparisonTable } from "@/components/content/comparison-table";
 import { InfoCallout } from "@/components/content/info-callout";
 import { QuizContainer } from "@/components/quiz/quiz-container";
 import { quizCh6 } from "@/data/quiz-ch6";
+import { SwitchLearning } from "@/components/diagrams/switch-learning";
 import {
   Cable,
   Wifi,
@@ -737,6 +738,20 @@ export default function Capitulo6() {
             <p className="pt-1 text-slate-500 dark:text-slate-400">Nótese: A-B pueden comunicarse simultáneamente con C-D sin colisiones</p>
           </div>
         </ExampleBlock>
+
+        {/* ── Diagrama interactivo ── */}
+        <div className="rounded-xl border border-border bg-background p-5 space-y-3">
+          <div>
+            <h3 className="text-base font-semibold text-foreground">
+              Simulación interactiva: Auto-aprendizaje del Switch
+            </h3>
+            <p className="text-sm text-muted mt-1">
+              Avanzá paso a paso para ver cómo el switch construye su tabla MAC,
+              cuándo hace FLOOD y cuándo reenvía directamente.
+            </p>
+          </div>
+          <SwitchLearning />
+        </div>
 
         <InfoCallout variant="info" title="Spanning Tree Protocol (STP)">
           <p>
