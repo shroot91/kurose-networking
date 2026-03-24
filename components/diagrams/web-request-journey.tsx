@@ -321,9 +321,8 @@ const STEPS: StepData[] = [
   },
 ];
 
-// ─── Layout constants ─────────────────────────────────────────────────────────
+// ─── Desktop layout constants (viewBox 700×380) ───────────────────────────────
 
-// viewBox="0 0 700 380"
 const ACTORS = {
   laptop:  { x: 60,  y: 190, label: "Laptop",       sub: "192.168.1.100",  color: "#539bf5" },
   ap:      { x: 165, y: 190, label: "WiFi AP",       sub: "802.11",         color: "#57ab5a" },
@@ -333,13 +332,34 @@ const ACTORS = {
   google:  { x: 630, y: 190, label: "google.com",    sub: "142.250.x.x",    color: "#e05d44" },
 };
 
-// Link segment definitions: [x1, y1, x2, y2]
 const LINK_COORDS: Record<LinkId, [number, number, number, number]> = {
   "laptop-ap":      [ACTORS.laptop.x + 26, ACTORS.laptop.y, ACTORS.ap.x - 26,     ACTORS.ap.y],
   "ap-switch":      [ACTORS.ap.x + 26,     ACTORS.ap.y,     ACTORS.switch.x - 26, ACTORS.switch.y],
   "switch-router":  [ACTORS.switch.x + 26, ACTORS.switch.y, ACTORS.router.x - 26, ACTORS.router.y],
   "router-dns":     [ACTORS.router.x + 18, ACTORS.router.y - 18, ACTORS.dns.x - 18, ACTORS.dns.y + 18],
   "router-google":  [ACTORS.router.x + 26, ACTORS.router.y, ACTORS.google.x - 26, ACTORS.google.y],
+};
+
+// ─── Mobile layout constants (viewBox 360×220) ────────────────────────────────
+// 2-row layout: top row = Laptop→AP→Switch→Router, bottom row = DNS + Google
+
+const M_R = 20; // circle radius
+
+const M_ACTORS = {
+  laptop: { x: 40,  y: 70,  label: "Laptop",    sub: "192.168.1.100", color: "#539bf5" },
+  ap:     { x: 118, y: 70,  label: "WiFi AP",   sub: "802.11",        color: "#57ab5a" },
+  switch: { x: 196, y: 70,  label: "Switch",    sub: "Capa 2",        color: "#6cb6ff" },
+  router: { x: 274, y: 70,  label: "Router",    sub: "192.168.1.1",   color: "#f69d50" },
+  dns:    { x: 196, y: 168, label: "DNS",        sub: "8.8.8.8",       color: "#daaa3f" },
+  google: { x: 320, y: 168, label: "Google",    sub: "142.250.x.x",   color: "#e05d44" },
+};
+
+const M_LINK_COORDS: Record<LinkId, [number, number, number, number]> = {
+  "laptop-ap":     [M_ACTORS.laptop.x + M_R, M_ACTORS.laptop.y, M_ACTORS.ap.x - M_R,     M_ACTORS.ap.y],
+  "ap-switch":     [M_ACTORS.ap.x + M_R,     M_ACTORS.ap.y,     M_ACTORS.switch.x - M_R, M_ACTORS.switch.y],
+  "switch-router": [M_ACTORS.switch.x + M_R, M_ACTORS.switch.y, M_ACTORS.router.x - M_R, M_ACTORS.router.y],
+  "router-dns":    [M_ACTORS.router.x - 10,  M_ACTORS.router.y + M_R, M_ACTORS.dns.x + 14, M_ACTORS.dns.y - M_R],
+  "router-google": [M_ACTORS.router.x + 14,  M_ACTORS.router.y + M_R, M_ACTORS.google.x - 4, M_ACTORS.google.y - M_R],
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -374,13 +394,15 @@ interface ActorProps {
   id: string;
   x: number;
   y: number;
+  r?: number;
   label: string;
   sub: string;
   color: string;
   active: boolean;
+  fontSize?: number;
 }
 
-function Actor({ x, y, label, sub, color, active }: ActorProps) {
+function Actor({ x, y, r = 24, label, sub, color, active, fontSize = 9 }: ActorProps) {
   const fill = active ? color : "#2d333b";
   const stroke = active ? color : "#444c56";
   const textColor = active ? "#e6edf3" : "#768390";
@@ -388,23 +410,16 @@ function Actor({ x, y, label, sub, color, active }: ActorProps) {
 
   return (
     <g>
-      <circle
-        cx={x}
-        cy={y}
-        r={24}
-        fill={fill + "22"}
-        stroke={stroke}
-        strokeWidth={active ? 2.5 : 1.5}
-      />
-      <text x={x} y={y + 4} textAnchor="middle" fontSize={9} fontWeight="bold" fill={textColor}>
+      <circle cx={x} cy={y} r={r} fill={fill + "22"} stroke={stroke} strokeWidth={active ? 2.5 : 1.5} />
+      <text x={x} y={y + 4} textAnchor="middle" fontSize={fontSize} fontWeight="bold" fill={textColor}>
         {label.length > 8 ? label.slice(0, 8) : label}
       </text>
       {label.length > 8 && (
-        <text x={x} y={y + 14} textAnchor="middle" fontSize={8} fill={textColor}>
+        <text x={x} y={y + 4 + fontSize} textAnchor="middle" fontSize={fontSize - 1} fill={textColor}>
           {label.slice(8)}
         </text>
       )}
-      <text x={x} y={y + 36} textAnchor="middle" fontSize={7.5} fill={subColor}>
+      <text x={x} y={y + r + 14} textAnchor="middle" fontSize={fontSize - 1.5} fill={subColor}>
         {sub}
       </text>
     </g>
@@ -425,10 +440,62 @@ export function WebRequestJourney() {
 
   return (
     <div className="space-y-4 rounded-xl border border-border bg-card p-4 sm:p-6">
-      {/* ── SVG Topology ─────────────────────────────────────────────────────── */}
+      {/* ── Mobile SVG (compact 2-row layout) ──────────────────────────────── */}
+      <svg
+        viewBox="0 0 360 220"
+        className="w-full sm:hidden"
+        aria-label="Diagrama móvil: solicitud web"
+      >
+        {/* Internet bubble (bottom row area) */}
+        <rect x={166} y={138} width={180} height={60} rx={10}
+          fill="none" stroke="#444c56" strokeWidth={1} strokeDasharray="6 3" />
+        <text x={256} y={133} textAnchor="middle" fontSize={9} fill="#768390" fontStyle="italic">Internet</text>
+
+        {/* Mobile links */}
+        {(Object.keys(M_LINK_COORDS) as LinkId[]).map((id) => {
+          const [x1, y1, x2, y2] = M_LINK_COORDS[id];
+          const state = step.links[id];
+          return (
+            <line key={id} x1={x1} y1={y1} x2={x2} y2={y2}
+              stroke={linkStroke(state)} strokeWidth={linkWidth(state)}
+              strokeDasharray={linkDash(state)} />
+          );
+        })}
+
+        {/* Mid-point dots on active mobile links */}
+        {(Object.keys(M_LINK_COORDS) as LinkId[]).map((id) => {
+          const [x1, y1, x2, y2] = M_LINK_COORDS[id];
+          const state = step.links[id];
+          if (!state || state === "idle") return null;
+          return <circle key={id + "-dot"} cx={(x1 + x2) / 2} cy={(y1 + y2) / 2}
+            r={3.5} fill={linkStroke(state)} opacity={0.9} />;
+        })}
+
+        {/* Mobile actors */}
+        {(Object.keys(M_ACTORS) as (keyof typeof M_ACTORS)[]).map((id) => {
+          const a = M_ACTORS[id];
+          return <Actor key={id} id={id} x={a.x} y={a.y} r={M_R}
+            label={a.label} sub={a.sub} color={a.color}
+            active={actorActive(id, step)} fontSize={9} />;
+        })}
+
+        {/* Mobile legend (compact) */}
+        <g transform="translate(4, 200)">
+          <line x1={0} y1={6} x2={16} y2={6} stroke="#818cf8" strokeWidth={2} />
+          <text x={19} y={10} fontSize={8} fill="#768390">Envío</text>
+          <line x1={52} y1={6} x2={68} y2={6} stroke="#22c55e" strokeWidth={2} />
+          <text x={71} y={10} fontSize={8} fill="#768390">Respuesta</text>
+          <line x1={120} y1={6} x2={136} y2={6} stroke="#f59e0b" strokeWidth={1.5} strokeDasharray="4 2" />
+          <text x={139} y={10} fontSize={8} fill="#768390">Broadcast</text>
+          <line x1={195} y1={6} x2={211} y2={6} stroke="#a78bfa" strokeWidth={2} strokeDasharray="3 2" />
+          <text x={214} y={10} fontSize={8} fill="#768390">Bidireccional</text>
+        </g>
+      </svg>
+
+      {/* ── Desktop SVG Topology (horizontal) ───────────────────────────────── */}
       <svg
         viewBox="0 0 700 380"
-        className="w-full max-w-4xl mx-auto"
+        className="w-full max-w-4xl mx-auto hidden sm:block"
         aria-label="Diagrama interactivo: Un día en la vida de una solicitud web"
       >
         {/* Internet cloud region */}
