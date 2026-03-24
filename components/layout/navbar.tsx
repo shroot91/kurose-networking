@@ -37,6 +37,17 @@ export function Navbar() {
               Cap. {ch.number}
             </Link>
           ))}
+          <Link
+            href="/retrospectiva"
+            className={cn(
+              "px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+              pathname === "/retrospectiva"
+                ? "bg-primary/10 text-primary"
+                : "text-muted hover:text-foreground hover:bg-card"
+            )}
+          >
+            Resumen
+          </Link>
           <button
             onClick={toggleTheme}
             className="ml-2 p-2 rounded-lg text-muted hover:text-foreground hover:bg-card transition-colors"
@@ -82,6 +93,18 @@ export function Navbar() {
               Capítulo {ch.number}: {ch.title}
             </Link>
           ))}
+          <Link
+            href="/retrospectiva"
+            onClick={() => setOpen(false)}
+            className={cn(
+              "block px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+              pathname === "/retrospectiva"
+                ? "bg-primary/10 text-primary"
+                : "text-muted hover:text-foreground"
+            )}
+          >
+            📋 Resumen
+          </Link>
         </nav>
       )}
     </header>
