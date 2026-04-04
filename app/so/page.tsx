@@ -1,50 +1,28 @@
 import Link from "next/link";
-import { ArrowLeft, Cpu, Construction } from "lucide-react";
+import { soChapters } from "@/data/so-chapters";
+import {
+  ArrowLeft,
+  Cpu,
+  GitBranch,
+  HardDrive,
+  Shield,
+  MemoryStick,
+  ChevronRight,
+} from "lucide-react";
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Cpu,
+  GitBranch,
+  HardDrive,
+  Shield,
+  MemoryStick,
+};
 
 export const metadata = {
   title: "Sistemas Operativos — Tanenbaum",
   description:
-    "Aprende sistemas operativos de forma interactiva basándote en el libro de Tanenbaum",
+    "Aprende sistemas operativos de forma interactiva basándote en Modern Operating Systems de Tanenbaum",
 };
-
-const plannedChapters = [
-  {
-    number: 1,
-    title: "Introducción a los SO",
-    description: "Historia, conceptos básicos, tipos de sistemas operativos y llamadas al sistema.",
-    color: "from-amber-600 to-amber-800",
-  },
-  {
-    number: 2,
-    title: "Procesos e Hilos",
-    description: "Modelo de proceso, comunicación entre procesos, scheduling y deadlocks.",
-    color: "from-orange-600 to-orange-800",
-  },
-  {
-    number: 3,
-    title: "Gestión de Memoria",
-    description: "Memoria virtual, paginación, segmentación, reemplazo de páginas.",
-    color: "from-red-600 to-red-800",
-  },
-  {
-    number: 4,
-    title: "Sistemas de Archivos",
-    description: "Implementación de filesystems, inodos, journaling, RAID.",
-    color: "from-rose-600 to-rose-800",
-  },
-  {
-    number: 5,
-    title: "I/O y Drivers",
-    description: "Software de E/S, drivers de dispositivos, discos, relojes, terminales.",
-    color: "from-pink-600 to-pink-800",
-  },
-  {
-    number: 6,
-    title: "Seguridad",
-    description: "Modelos de seguridad, criptografía, exploits, malware y defensa.",
-    color: "from-purple-600 to-purple-800",
-  },
-];
 
 export default function SOPage() {
   return (
@@ -74,7 +52,7 @@ export default function SOPage() {
             Sistemas Operativos
           </h1>
           <p className="text-xl text-white/70 max-w-2xl mx-auto mb-2">
-            Procesos, memoria, filesystems y más
+            Procesos, memoria, filesystems y seguridad, explicados desde adentro
           </p>
           <p className="text-sm text-white/50">
             Basado en &quot;Modern Operating Systems&quot; — Andrew S. Tanenbaum
@@ -82,43 +60,62 @@ export default function SOPage() {
         </div>
       </div>
 
-      {/* Coming soon notice */}
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-10">
-        <div className="flex items-center gap-3 rounded-xl border border-amber-300/30 bg-amber-50/50 dark:bg-amber-900/10 p-4 mb-12">
-          <Construction className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0" />
-          <p className="text-sm text-amber-700 dark:text-amber-300">
-            <span className="font-semibold">En construcción.</span> Los capítulos se van a ir
-            publicando próximamente. Por ahora podés ver el plan de contenidos abajo.
-          </p>
-        </div>
-
-        {/* Planned chapters grid */}
+      {/* Chapters grid */}
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16">
         <h2 className="text-2xl font-bold text-center mb-10 text-foreground">
-          Plan de Contenidos
+          Módulos de Estudio
         </h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {plannedChapters.map((ch) => (
-            <div
-              key={ch.number}
-              className="rounded-2xl border border-border bg-card p-6 opacity-60"
-            >
-              <div
-                className={`inline-flex rounded-xl bg-gradient-to-r ${ch.color} p-3 text-white mb-4`}
+          {soChapters.map((ch) => {
+            const Icon = iconMap[ch.icon] || Cpu;
+            return (
+              <Link
+                key={ch.slug}
+                href={`/${ch.slug}`}
+                className="group block rounded-2xl border border-border bg-card p-6 shadow-sm hover:shadow-md transition-all hover:-translate-y-1"
               >
-                <Cpu className="h-6 w-6" />
-              </div>
-              <p className="text-xs font-semibold text-muted uppercase tracking-wider mb-1">
-                Capítulo {ch.number}
-              </p>
-              <h3 className="text-lg font-bold text-foreground mb-2">{ch.title}</h3>
-              <p className="text-sm text-muted leading-relaxed">{ch.description}</p>
-              <div className="mt-4">
-                <span className="text-xs px-2 py-0.5 rounded-full bg-border text-muted">
-                  Próximamente
-                </span>
-              </div>
-            </div>
-          ))}
+                <div
+                  className={`inline-flex rounded-xl bg-gradient-to-r ${ch.color} p-3 text-white mb-4`}
+                >
+                  <Icon className="h-6 w-6" />
+                </div>
+                <p className="text-xs font-semibold text-muted uppercase tracking-wider mb-1">
+                  Capítulo {ch.number}
+                </p>
+                <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                  {ch.title}
+                </h3>
+                <p className="text-sm text-muted leading-relaxed">
+                  {ch.description}
+                </p>
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  {ch.sections.slice(0, -1).map((s) => (
+                    <span
+                      key={s.id}
+                      className="text-xs px-2 py-0.5 rounded-full bg-background text-muted"
+                    >
+                      {s.title}
+                    </span>
+                  ))}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Feature strip */}
+        <div className="mt-16 p-6 rounded-2xl border border-border bg-card flex items-center gap-4">
+          <div className="rounded-full bg-amber-500/10 p-3 shrink-0">
+            <ChevronRight className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+          </div>
+          <div>
+            <p className="font-semibold text-foreground">
+              Cada capítulo incluye diagramas, ejemplos resueltos y quiz de 20 preguntas
+            </p>
+            <p className="text-sm text-muted mt-0.5">
+              Basado en Modern Operating Systems — Andrew S. Tanenbaum, 4ta edición
+            </p>
+          </div>
         </div>
       </div>
     </div>

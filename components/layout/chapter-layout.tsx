@@ -5,12 +5,14 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ChapterLayoutProps {
   chapter: Chapter;
+  allChapters?: Chapter[];
   children: React.ReactNode;
 }
 
-export function ChapterLayout({ chapter, children }: ChapterLayoutProps) {
-  const prevChapter = chapters.find((c) => c.number === chapter.number - 1);
-  const nextChapter = chapters.find((c) => c.number === chapter.number + 1);
+export function ChapterLayout({ chapter, allChapters, children }: ChapterLayoutProps) {
+  const pool = allChapters ?? chapters;
+  const prevChapter = pool.find((c) => c.number === chapter.number - 1);
+  const nextChapter = pool.find((c) => c.number === chapter.number + 1);
 
   return (
     <div>
