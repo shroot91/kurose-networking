@@ -1,100 +1,112 @@
 import Link from "next/link";
-import { chapters } from "@/data/chapters";
-import { Globe, AppWindow, ArrowLeftRight, BookOpen, Network, Settings, Cable, ChevronRight } from "lucide-react";
+import { BookOpen, Cpu, ChevronRight, GraduationCap } from "lucide-react";
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Globe,
-  AppWindow,
-  ArrowLeftRight,
-  Network,
-  Settings,
-  Cable,
-};
+const subjects = [
+  {
+    href: "/redes",
+    icon: BookOpen,
+    title: "Redes de Computadoras",
+    subtitle: "Kurose & Ross",
+    description:
+      "Internet, HTTP, DNS, TCP, IP, Ethernet, WiFi y más. 6 capítulos con diagramas interactivos, ejemplos y quizzes.",
+    color: "from-blue-600 to-blue-800",
+    iconBg: "bg-blue-500/20",
+    iconColor: "text-blue-300",
+    badge: "6 capítulos disponibles",
+    badgeColor: "bg-blue-500/20 text-blue-300",
+    available: true,
+  },
+  {
+    href: "/so",
+    icon: Cpu,
+    title: "Sistemas Operativos",
+    subtitle: "Tanenbaum",
+    description:
+      "Procesos, memoria virtual, sistemas de archivos, scheduling, sincronización y seguridad.",
+    color: "from-amber-600 to-amber-800",
+    iconBg: "bg-amber-500/20",
+    iconColor: "text-amber-300",
+    badge: "Próximamente",
+    badgeColor: "bg-amber-500/20 text-amber-400",
+    available: false,
+  },
+];
 
 export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <div className="bg-gradient-to-br from-primary to-slate-900 dark:from-[#161b22] dark:to-[#0d1117] text-white py-20 px-4 sm:px-6">
-        <div className="mx-auto max-w-4xl text-center">
+      <div className="bg-gradient-to-br from-slate-800 to-slate-950 dark:from-[#161b22] dark:to-[#0d1117] text-white py-20 px-4 sm:px-6">
+        <div className="mx-auto max-w-3xl text-center">
           <div className="flex justify-center mb-6">
             <div className="rounded-full bg-white/10 p-4">
-              <BookOpen className="h-10 w-10 text-accent-light" />
+              <GraduationCap className="h-10 w-10 text-white/80" />
             </div>
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-            Redes de Computadoras
+            Materias Interactivas
           </h1>
           <p className="text-xl text-white/70 max-w-2xl mx-auto mb-2">
-            Aprende redes de forma interactiva y visual
+            Conceptos complejos explicados con diagramas, analogías y ejemplos reales
           </p>
-          <p className="text-sm text-white/50">
-            Basado en &quot;Computer Networking: A Top-Down Approach&quot; — Kurose &amp; Ross
+          <p className="text-sm text-white/40">
+            Material educativo basado en los libros de referencia de cada materia
           </p>
         </div>
       </div>
 
-      {/* Chapters grid */}
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-16">
-        <h2 className="text-2xl font-bold text-center mb-10 text-foreground">Módulos de Estudio</h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {chapters.map((ch) => {
-            const Icon = iconMap[ch.icon] || Globe;
+      {/* Subject cards */}
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 py-16">
+        <h2 className="text-2xl font-bold text-center mb-10 text-foreground">
+          Elegí una materia
+        </h2>
+
+        <div className="grid gap-6 sm:grid-cols-2">
+          {subjects.map((s) => {
+            const Icon = s.icon;
             return (
               <Link
-                key={ch.slug}
-                href={`/${ch.slug}`}
-                className="group block rounded-2xl border border-border bg-card p-6 shadow-sm hover:shadow-md transition-all hover:-translate-y-1"
+                key={s.href}
+                href={s.href}
+                className={`group relative flex flex-col rounded-2xl overflow-hidden border border-border bg-card shadow-sm transition-all ${
+                  s.available
+                    ? "hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+                    : "cursor-default"
+                }`}
               >
-                <div
-                  className={`inline-flex rounded-xl bg-gradient-to-r ${ch.color} p-3 text-white mb-4`}
-                >
-                  <Icon className="h-6 w-6" />
-                </div>
-                <p className="text-xs font-semibold text-muted uppercase tracking-wider mb-1">
-                  Capítulo {ch.number}
-                </p>
-                <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary-light transition-colors">
-                  {ch.title}
-                </h3>
-                <p className="text-sm text-muted leading-relaxed">{ch.description}</p>
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                  {ch.sections.slice(0, -1).map((s) => (
+                {/* Colored top band */}
+                <div className={`bg-gradient-to-r ${s.color} p-6 pb-8`}>
+                  <div className="flex items-start justify-between">
+                    <div className={`rounded-xl ${s.iconBg} p-3`}>
+                      <Icon className={`h-7 w-7 ${s.iconColor}`} />
+                    </div>
                     <span
-                      key={s.id}
-                      className="text-xs px-2 py-0.5 rounded-full bg-background text-muted"
+                      className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${s.badgeColor}`}
                     >
-                      {s.title}
+                      {s.badge}
                     </span>
-                  ))}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mt-4 mb-0.5">
+                    {s.title}
+                  </h3>
+                  <p className="text-white/60 text-sm">{s.subtitle}</p>
+                </div>
+
+                {/* Description */}
+                <div className="flex-1 p-6 flex items-end justify-between gap-4">
+                  <p className="text-sm text-muted leading-relaxed">
+                    {s.description}
+                  </p>
+                  {s.available && (
+                    <ChevronRight className="h-5 w-5 text-muted group-hover:text-foreground group-hover:translate-x-0.5 transition-all shrink-0" />
+                  )}
                 </div>
               </Link>
             );
           })}
         </div>
 
-        {/* Retrospectiva banner */}
-        <div className="mt-10">
-          <Link
-            href="/retrospectiva"
-            className="flex items-center gap-4 rounded-xl border border-border bg-card hover:bg-border transition-colors p-6 group"
-          >
-            <div className="rounded-full bg-primary/10 p-3 shrink-0">
-              <BookOpen className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="font-semibold text-foreground group-hover:text-primary-light transition-colors">
-                Retrospectiva: Un día en la vida de una solicitud web
-              </p>
-              <p className="text-sm text-muted mt-0.5">
-                Seguí cada protocolo desde que tu laptop se conecta a WiFi hasta que carga google.com — DHCP → ARP → DNS → TCP → TLS → HTTP/2
-              </p>
-            </div>
-            <ChevronRight className="h-5 w-5 text-muted group-hover:text-primary transition-colors shrink-0 ml-auto" />
-          </Link>
-        </div>
-
-        {/* Features */}
+        {/* Features strip */}
         <div className="mt-20 grid gap-8 sm:grid-cols-3 text-center">
           <div>
             <div className="inline-flex rounded-full bg-blue-100 dark:bg-blue-900/30 p-3 mb-3">
@@ -104,7 +116,7 @@ export default function Home() {
             </div>
             <h3 className="font-semibold text-foreground mb-1">Diagramas Interactivos</h3>
             <p className="text-sm text-muted">
-              Visualiza protocolos, paquetes y arquitecturas con animaciones paso a paso
+              Visualizá protocolos y arquitecturas con animaciones paso a paso
             </p>
           </div>
           <div>
@@ -126,7 +138,7 @@ export default function Home() {
             </div>
             <h3 className="font-semibold text-foreground mb-1">Cuestionarios</h3>
             <p className="text-sm text-muted">
-              Evalúa tu comprensión con quizzes interactivos al final de cada capítulo
+              Evaluá tu comprensión con quizzes al final de cada capítulo
             </p>
           </div>
         </div>

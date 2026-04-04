@@ -16,9 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Redes de Computadoras — Kurose",
+  title: "EduInteractivo — Materias con diagramas y quizzes",
   description:
-    "Aprende redes de computadoras de manera interactiva basándote en el libro de Kurose y Ross",
+    "Materias universitarias explicadas de forma interactiva: redes, sistemas operativos y más",
 };
 
 export default function RootLayout({

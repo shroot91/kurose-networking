@@ -3,10 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Menu, X, BookOpen, Sun, Moon } from "lucide-react";
-import { chapters } from "@/data/chapters";
+import { Menu, X, GraduationCap, Sun, Moon, BookOpen, Cpu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
+
+const subjects = [
+  { href: "/redes", label: "Redes", icon: BookOpen, match: "/redes" },
+  { href: "/so", label: "Sist. Operativos", icon: Cpu, match: "/so" },
+];
 
 export function Navbar() {
   const pathname = usePathname();
@@ -17,37 +21,30 @@ export function Navbar() {
     <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md">
       <div className="mx-auto max-w-7xl flex items-center justify-between px-4 sm:px-6 h-16">
         <Link href="/" className="flex items-center gap-2 font-bold text-primary text-lg">
-          <BookOpen className="h-6 w-6 text-accent" />
-          Redes Kurose
+          <GraduationCap className="h-6 w-6 text-accent" />
+          EduInteractivo
         </Link>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-1">
-          {chapters.map((ch) => (
-            <Link
-              key={ch.slug}
-              href={`/${ch.slug}`}
-              className={cn(
-                "px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                pathname === `/${ch.slug}`
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted hover:text-foreground hover:bg-card"
-              )}
-            >
-              Cap. {ch.number}
-            </Link>
-          ))}
-          <Link
-            href="/retrospectiva"
-            className={cn(
-              "px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-              pathname === "/retrospectiva"
-                ? "bg-primary/10 text-primary"
-                : "text-muted hover:text-foreground hover:bg-card"
-            )}
-          >
-            Resumen
-          </Link>
+          {subjects.map(({ href, label, icon: Icon, match }) => {
+            const isActive = pathname.startsWith(match);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted hover:text-foreground hover:bg-card"
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </Link>
+            );
+          })}
           <button
             onClick={toggleTheme}
             className="ml-2 p-2 rounded-lg text-muted hover:text-foreground hover:bg-card transition-colors"
@@ -78,33 +75,25 @@ export function Navbar() {
       {/* Mobile menu */}
       {open && (
         <nav className="md:hidden border-t border-border bg-card px-4 py-3 space-y-1">
-          {chapters.map((ch) => (
-            <Link
-              key={ch.slug}
-              href={`/${ch.slug}`}
-              onClick={() => setOpen(false)}
-              className={cn(
-                "block px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                pathname === `/${ch.slug}`
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted hover:text-foreground"
-              )}
-            >
-              Capítulo {ch.number}: {ch.title}
-            </Link>
-          ))}
-          <Link
-            href="/retrospectiva"
-            onClick={() => setOpen(false)}
-            className={cn(
-              "block px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-              pathname === "/retrospectiva"
-                ? "bg-primary/10 text-primary"
-                : "text-muted hover:text-foreground"
-            )}
-          >
-            📋 Resumen
-          </Link>
+          {subjects.map(({ href, label, icon: Icon, match }) => {
+            const isActive = pathname.startsWith(match);
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                className={cn(
+                  "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted hover:text-foreground"
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </Link>
+            );
+          })}
         </nav>
       )}
     </header>

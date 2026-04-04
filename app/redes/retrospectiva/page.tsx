@@ -30,11 +30,11 @@ export default function RetrospectivaPage() {
       <div className="border-b border-border bg-card">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 py-4 flex items-center gap-3">
           <Link
-            href="/"
+            href="/redes"
             className="flex items-center gap-1.5 text-sm text-muted hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            Volver al inicio
+            Volver a Redes
           </Link>
           <span className="text-border">|</span>
           <span className="text-xs text-muted">Kurose &amp; Ross — Capítulo 6</span>
@@ -135,11 +135,11 @@ export default function RetrospectivaPage() {
         {/* Footer nav */}
         <div className="border-t border-border pt-8 flex items-center justify-between">
           <Link
-            href="/"
+            href="/redes"
             className="flex items-center gap-1.5 text-sm text-muted hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            Volver al inicio
+            Volver a Redes
           </Link>
           <span className="text-xs text-muted">
             Kurose &amp; Ross — Capítulo 6: Enlace de Datos

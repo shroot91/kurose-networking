@@ -13,7 +13,7 @@ export const chapters: Chapter[] = [
   {
     number: 1,
     title: "Redes de Computadoras e Internet",
-    slug: "capitulo-1",
+    slug: "redes/capitulo-1",
     description:
       "Qué es Internet, conmutación de paquetes vs circuitos, retardos, pérdida, throughput y el modelo de capas de protocolos.",
     color: "from-blue-600 to-blue-800",
@@ -32,7 +32,7 @@ export const chapters: Chapter[] = [
   {
     number: 2,
     title: "Capa de Aplicación",
-    slug: "capitulo-2",
+    slug: "redes/capitulo-2",
     description:
       "Arquitecturas cliente-servidor y P2P, HTTP, DNS, SMTP, correo electrónico y programación de sockets.",
     color: "from-emerald-600 to-emerald-800",
@@ -53,7 +53,7 @@ export const chapters: Chapter[] = [
   {
     number: 3,
     title: "Capa de Transporte",
-    slug: "capitulo-3",
+    slug: "redes/capitulo-3",
     description:
       "UDP, TCP, transferencia confiable de datos, control de flujo, control de congestión y el three-way handshake.",
     color: "from-orange-600 to-orange-800",
@@ -72,7 +72,7 @@ export const chapters: Chapter[] = [
   {
     number: 4,
     title: "Capa de Red",
-    slug: "capitulo-4",
+    slug: "redes/capitulo-4",
     description: "IPv4, IPv6, direccionamiento, CIDR, NAT, DHCP, algoritmos de enrutamiento (Dijkstra, Bellman-Ford) y protocolos BGP, OSPF.",
     color: "from-violet-600 to-violet-800",
     colorLight: "bg-violet-50 text-violet-800 border-violet-200 dark:bg-violet-950/30 dark:text-violet-300 dark:border-violet-800",
@@ -92,7 +92,7 @@ export const chapters: Chapter[] = [
   {
     number: 5,
     title: "Plano de Control de la Red",
-    slug: "capitulo-5",
+    slug: "redes/capitulo-5",
     description:
       "OSPF, BGP, enrutamiento en Internet, hot potato routing, SDN control plane, ICMP y gestión de redes con SNMP y NETCONF.",
     color: "from-rose-600 to-rose-800",
@@ -112,7 +112,7 @@ export const chapters: Chapter[] = [
   {
     number: 6,
     title: "Capa de Enlace y LANs",
-    slug: "capitulo-6",
+    slug: "redes/capitulo-6",
     description:
       "Detección de errores (CRC, paridad), protocolos de acceso múltiple (CSMA/CD, CSMA/CA, ALOHA), Ethernet, switches, VLANs y redes WiFi.",
     color: "from-teal-600 to-teal-800",
